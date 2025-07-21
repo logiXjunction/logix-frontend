@@ -3,7 +3,7 @@ import TransporterDashboard from './pages/transporter_dashboard';
 // import Home from './pages/home'; // You can create this as a landing page
 import CarrierRegistration from './pages/signup/transporter_registration'; 
 import ShipperRegistration from './pages/signup/shipper_registration'; 
-import Shipments from './pages/dashboard/shipments'; // Assuming you have this component
+import Shipments from './pages/dashboard/shipments' // Assuming you have this component
 import Consignment from './pages/dashboard/consignment'; // Assuming you have this component
 // import AboutPage from './pages/aboutUs';
 // import CareersPage from './pages/Join_us';

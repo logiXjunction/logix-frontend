@@ -44,7 +44,7 @@ export default function CarrierSignup() {
       ...prev,
       [name]: newValue
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -120,8 +120,8 @@ export default function CarrierSignup() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      
+    <div className="pt-15 min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -149,9 +149,8 @@ export default function CarrierSignup() {
                   name="customerServiceNumber"
                   value={formData.customerServiceNumber}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    errors.customerServiceNumber ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.customerServiceNumber ? 'border-red-300' : 'border-gray-300'
+                    }`}
                   placeholder="+91 XXXXXXXXXX"
                 />
                 {errors.customerServiceNumber && (
@@ -167,9 +166,8 @@ export default function CarrierSignup() {
                   name="companyEmail"
                   value={formData.companyEmail}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    errors.companyEmail ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.companyEmail ? 'border-red-300' : 'border-gray-300'
+                    }`}
                   placeholder="company@example.com"
                 />
                 {errors.companyEmail && (
@@ -185,9 +183,8 @@ export default function CarrierSignup() {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    errors.password ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.password ? 'border-red-300' : 'border-gray-300'
+                    }`}
                   placeholder="Create password"
                 />
                 {errors.password && (
@@ -203,9 +200,8 @@ export default function CarrierSignup() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+                    }`}
                   placeholder="Confirm password"
                 />
                 {errors.confirmPassword && (
@@ -222,19 +218,26 @@ export default function CarrierSignup() {
                     name="gstNumber"
                     value={formData.gstNumber}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.gstNumber ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.gstNumber ? 'border-red-300' : 'border-gray-300'
+                      }`}
                     placeholder="GST Number"
                   />
                   <button
                     type="button"
                     onClick={handleGstVerify}
                     disabled={gstVerifying || !formData.gstNumber}
-                    className={`px-3 py-2 rounded-lg font-semibold ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'} ${gstVerifying ? 'opacity-50' : ''}`}
+                    title={
+                      !formData.gstNumber
+                        ? 'Enter GST number to verify'
+                        : gstVerifying
+                          ? 'Verifying GST...'
+                          : 'Click to verify GST'
+                    }
+                    className={`px-3 py-2 rounded-lg font-semibold ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'} ${gstVerifying || !formData.gstNumber ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                   >
                     {gstVerifying ? 'Verifying...' : gstVerified ? 'Verified' : 'Verify'}
                   </button>
+
                 </div>
                 {errors.gstNumber && (
                   <p className="mt-1 text-sm text-red-600">{errors.gstNumber}</p>
@@ -258,9 +261,8 @@ export default function CarrierSignup() {
                     name="companyName"
                     value={formData.companyName}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.companyName ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.companyName ? 'border-red-300' : 'border-gray-300'
+                      }`}
                     placeholder="Enter company name"
                   />
                   {errors.companyName && (
@@ -276,9 +278,8 @@ export default function CarrierSignup() {
                     value={formData.companyAddress}
                     onChange={handleInputChange}
                     rows="3"
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.companyAddress ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.companyAddress ? 'border-red-300' : 'border-gray-300'
+                      }`}
                     placeholder="Enter complete company address"
                   />
                   {errors.companyAddress && (
@@ -294,7 +295,7 @@ export default function CarrierSignup() {
                 <Users className="h-5 w-5 text-blue-600" />
                 <h3 className="text-lg font-semibold text-gray-900">Owner Information</h3>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -305,9 +306,8 @@ export default function CarrierSignup() {
                     name="ownerName"
                     value={formData.ownerName}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.ownerName ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.ownerName ? 'border-red-300' : 'border-gray-300'
+                      }`}
                     placeholder="Enter owner name"
                   />
                   {errors.ownerName && (
@@ -324,9 +324,8 @@ export default function CarrierSignup() {
                     name="ownerContact"
                     value={formData.ownerContact}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.ownerContact ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.ownerContact ? 'border-red-300' : 'border-gray-300'
+                      }`}
                     placeholder="+91 XXXXXXXXXX"
                   />
                   {errors.ownerContact && (
@@ -342,7 +341,7 @@ export default function CarrierSignup() {
                 <Package className="h-5 w-5 text-blue-600" />
                 <h3 className="text-lg font-semibold text-gray-900">Fleet & Service Information</h3>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -353,9 +352,8 @@ export default function CarrierSignup() {
                     name="fleetSize"
                     value={formData.fleetSize}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.fleetSize ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.fleetSize ? 'border-red-300' : 'border-gray-300'
+                      }`}
                     placeholder="Number of vehicles"
                   />
                   {errors.fleetSize && (
@@ -371,9 +369,8 @@ export default function CarrierSignup() {
                     name="serviceType"
                     value={formData.serviceType}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.serviceType ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.serviceType ? 'border-red-300' : 'border-gray-300'
+                      }`}
                   >
                     <option value="">Select service coverage</option>
                     <option value="district">District Cities Service</option>
@@ -394,9 +391,8 @@ export default function CarrierSignup() {
                     name="serviceMode"
                     value={formData.serviceMode}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.serviceMode ? 'border-red-300' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.serviceMode ? 'border-red-300' : 'border-gray-300'
+                      }`}
                   >
                     <option value="">Select service mode</option>
                     <option value="godown-to-godown">Godown to Godown</option>
@@ -458,7 +454,7 @@ export default function CarrierSignup() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="cursor-pointer bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isSubmitting ? (
                   <div className="flex items-center space-x-2">

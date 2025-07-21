@@ -7,7 +7,7 @@ export const Switch = ({ checked, onCheckedChange }) => {
       role="switch"
       aria-checked={checked}
       onClick={onCheckedChange}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
+      className={`cursor-pointer  relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
         checked ? 'bg-[#3e92cc]' : 'bg-gray-300'
       }`}
     >

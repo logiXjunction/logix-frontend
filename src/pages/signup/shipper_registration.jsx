@@ -370,13 +370,24 @@ export default function ShipperSignup() {
             placeholder="GST Number"
           />
           <button
-            type="button"
-            onClick={handleGstVerify}
-            disabled={gstVerifying || !formData.companyGst}
-            className={`px-3 py-2 rounded-lg font-semibold ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'} ${gstVerifying ? 'opacity-50' : ''}`}
-          >
-            {gstVerifying ? 'Verifying...' : gstVerified ? 'Verified' : 'Verify'}
-          </button>
+  type="button"
+  onClick={handleGstVerify}
+  disabled={gstVerifying || !formData.companyGst}
+  className={`px-3 py-2 rounded-lg font-semibold
+    ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}
+    ${gstVerifying || !formData.companyGst ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+  `}
+  title={
+    !formData.companyGst
+      ? 'Enter GST number to verify'
+      : gstVerifying
+      ? 'Verifying GST...'
+      : 'Click to verify GST'
+  }
+>
+  {gstVerifying ? 'Verifying...' : gstVerified ? 'Verified' : 'Verify'}
+</button>
+
         </div>
         {errors.companyGst && (
           <p className="mt-1 text-sm text-red-600">{errors.companyGst}</p>
@@ -410,7 +421,7 @@ export default function ShipperSignup() {
                     type="button"
                     onClick={handleGstVerify}
                     disabled={gstVerifying || !formData.companyGst}
-                    className={`px-3 py-2 rounded-lg font-semibold ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'} ${gstVerifying ? 'opacity-50' : ''}`}
+                    className={`cursor-pointer px-3 py-2 rounded-lg font-semibold ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'} ${gstVerifying ? 'opacity-50' : ''}`}
                   >
                     {gstVerifying ? 'Verifying...' : gstVerified ? 'Verified' : 'Verify'}
                   </button>
@@ -484,7 +495,7 @@ export default function ShipperSignup() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
+    <div className="pt-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Form Header */}
@@ -532,7 +543,7 @@ export default function ShipperSignup() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="cursor-pointer bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isSubmitting ? (
                   <div className="flex items-center space-x-2">

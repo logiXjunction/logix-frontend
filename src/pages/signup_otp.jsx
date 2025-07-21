@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Switch } from '../components/ui/Switch';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import OtpInput from '../components/OtpInput';
+import OtpInput from '../components/otp_input';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function SignupFormPage() {
   const [role, setRole] = useState('shipper');
@@ -11,11 +13,22 @@ export default function SignupFormPage() {
   const [gst, setGst] = useState('');
   const [showOtp, setShowOtp] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your submission logic
-    console.log({ role, phone, email, gst });
+    // Add your backend submission logic
+    
+    if(!otpVerified) {
+      alert('Please verify your OTP before submitting');
+      return;
+    }
+
+    if(role=== 'shipper') {
+      navigate('/shipper-registration');
+    }else {
+      navigate('/carrier-registration');
+    }
   };
 
   const handleSendOtp = () => {
@@ -93,11 +106,14 @@ export default function SignupFormPage() {
                     type="text"
                     placeholder="Enter GST number"
                     value={gst}
-                    onChange={(e) => setGst(e.target.value)}
+                    onChange={(e) => setGst(e.target.value.toUpperCase())}
                     pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$"
                     required
                     className="w-full"
                   />
+                  <small className="text-xs text-gray-500">
+                    Format: 11AAAAA1111A1Z1
+                  </small>
                 </div>
             
                 <Button

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Truck, MapPin, Phone, Building, Users, Clock, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../../images/logo.jpeg'; // Adjust the path as necessary
 
 export default function CarrierSignup() {
@@ -17,17 +18,31 @@ export default function CarrierSignup() {
     pincode: '',
     districtRate: '',
     serviceMode: '',
-    etdCities: ''
+    etdCities: '',
+    password: '',
+    confirmPassword: ''
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [gstVerified, setGstVerified] = useState(false);
+  const [gstVerifying, setGstVerifying] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let newValue = value;
+    if (name === 'gstNumber') {
+      // Remove all spaces
+      let raw = value.replace(/\s+/g, '');
+      // Limit to 15 characters
+      if (raw.length > 15) raw = raw.slice(0, 15);
+      // Insert a space after every 4 characters
+      newValue = raw.replace(/(.{4})/g, '$1 ').trim();
+    }
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: newValue
     }));
     
     // Clear error when user starts typing
@@ -39,34 +54,44 @@ export default function CarrierSignup() {
     }
   };
 
+  const handleGstVerify = async () => {
+    setGstVerifying(true);
+    // TODO: Replace with real GST verification API call
+    setTimeout(() => {
+      setGstVerified(true);
+      setGstVerifying(false);
+      alert('GST number verified!');
+    }, 1000);
+  };
+
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.companyName) newErrors.companyName = 'Company name is required';
-    if (!formData.companyAddress) newErrors.companyAddress = 'Company address is required';
+
+    // Only these fields are compulsory
+    if (!formData.customerServiceNumber) newErrors.customerServiceNumber = 'Phone number is required';
     if (!formData.companyEmail) newErrors.companyEmail = 'Company email is required';
-    if (!formData.customerServiceNumber) newErrors.customerServiceNumber = 'Customer service number is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm password is required';
     if (!formData.gstNumber) newErrors.gstNumber = 'GST number is required';
-    if (!formData.ownerName) newErrors.ownerName = 'Owner name is required';
-    if (!formData.ownerContact) newErrors.ownerContact = 'Owner contact is required';
-    if (!formData.fleetSize) newErrors.fleetSize = 'Fleet size is required';
-    if (!formData.serviceType) newErrors.serviceType = 'Service type is required';
-    if (!formData.serviceMode) newErrors.serviceMode = 'Service mode is required';
-    
+    else if (formData.gstNumber.replace(/\s+/g, '').length !== 15) newErrors.gstNumber = 'GST number must be 15 characters';
+    if (!formData.companyName) newErrors.companyName = 'Company name is required';
+
+    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
     if (formData.companyEmail && !/\S+@\S+\.\S+/.test(formData.companyEmail)) {
       newErrors.companyEmail = 'Please enter a valid email address';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
-    
     if (!validateForm()) return;
-    
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       alert('Carrier registration submitted successfully! We will review your application and get back to you within 24-48 hours.');
@@ -86,8 +111,11 @@ export default function CarrierSignup() {
         pincode: '',
         districtRate: '',
         serviceMode: '',
-        etdCities: ''
+        etdCities: '',
+        password: '',
+        confirmPassword: ''
       });
+      navigate('/vehicle-registration'); // <-- Change navigation here
     }, 2000);
   };
 
@@ -110,13 +138,116 @@ export default function CarrierSignup() {
 
           {/* Form Body */}
           <div className="p-8 space-y-8">
+            {/* Top Fields: Phone, Email, Password, Confirm Password, GST */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  name="customerServiceNumber"
+                  value={formData.customerServiceNumber}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    errors.customerServiceNumber ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="+91 XXXXXXXXXX"
+                />
+                {errors.customerServiceNumber && (
+                  <p className="mt-1 text-sm text-red-600">{errors.customerServiceNumber}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email *
+                </label>
+                <input
+                  type="email"
+                  name="companyEmail"
+                  value={formData.companyEmail}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    errors.companyEmail ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="company@example.com"
+                />
+                {errors.companyEmail && (
+                  <p className="mt-1 text-sm text-red-600">{errors.companyEmail}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Create Password *
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    errors.password ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="Create password"
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirm Password *
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                  placeholder="Confirm password"
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+                )}
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  GST Number *
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    name="gstNumber"
+                    value={formData.gstNumber}
+                    onChange={handleInputChange}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                      errors.gstNumber ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                    placeholder="GST Number"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleGstVerify}
+                    disabled={gstVerifying || !formData.gstNumber}
+                    className={`px-3 py-2 rounded-lg font-semibold ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'} ${gstVerifying ? 'opacity-50' : ''}`}
+                  >
+                    {gstVerifying ? 'Verifying...' : gstVerified ? 'Verified' : 'Verify'}
+                  </button>
+                </div>
+                {errors.gstNumber && (
+                  <p className="mt-1 text-sm text-red-600">{errors.gstNumber}</p>
+                )}
+              </div>
+            </div>
+            {/* Rest of the form (company info, owner info, fleet info, etc.) */}
             {/* Company Information */}
-            <div className="space-y-6">
+            <div className="space-y-6 mt-8">
               <div className="flex items-center space-x-3 mb-4">
                 <Building className="h-5 w-5 text-blue-600" />
                 <h3 className="text-lg font-semibold text-gray-900">Company Information</h3>
               </div>
-              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -136,98 +267,24 @@ export default function CarrierSignup() {
                     <p className="mt-1 text-sm text-red-600">{errors.companyName}</p>
                   )}
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Email *
+                    Company Address *
                   </label>
-                  <input
-                    type="email"
-                    name="companyEmail"
-                    value={formData.companyEmail}
+                  <textarea
+                    name="companyAddress"
+                    value={formData.companyAddress}
                     onChange={handleInputChange}
+                    rows="3"
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.companyEmail ? 'border-red-300' : 'border-gray-300'
+                      errors.companyAddress ? 'border-red-300' : 'border-gray-300'
                     }`}
-                    placeholder="company@example.com"
+                    placeholder="Enter complete company address"
                   />
-                  {errors.companyEmail && (
-                    <p className="mt-1 text-sm text-red-600">{errors.companyEmail}</p>
+                  {errors.companyAddress && (
+                    <p className="mt-1 text-sm text-red-600">{errors.companyAddress}</p>
                   )}
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Company Address *
-                </label>
-                <textarea
-                  name="companyAddress"
-                  value={formData.companyAddress}
-                  onChange={handleInputChange}
-                  rows="3"
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    errors.companyAddress ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter complete company address"
-                />
-                {errors.companyAddress && (
-                  <p className="mt-1 text-sm text-red-600">{errors.companyAddress}</p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Customer Service Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="customerServiceNumber"
-                    value={formData.customerServiceNumber}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.customerServiceNumber ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    placeholder="+91 XXXXXXXXXX"
-                  />
-                  {errors.customerServiceNumber && (
-                    <p className="mt-1 text-sm text-red-600">{errors.customerServiceNumber}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    GST Number *
-                  </label>
-                  <input
-                    type="text"
-                    name="gstNumber"
-                    value={formData.gstNumber}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.gstNumber ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    placeholder="GST Number"
-                  />
-                  {errors.gstNumber && (
-                    <p className="mt-1 text-sm text-red-600">{errors.gstNumber}</p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  CIN Number (If Pvt Ltd)
-                </label>
-                <input
-                  type="text"
-                  name="cinNumber"
-                  value={formData.cinNumber}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                  placeholder="Corporate Identity Number"
-                />
               </div>
             </div>
 

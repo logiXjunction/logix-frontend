@@ -25,7 +25,7 @@ const features = [
 
 export default function KeyFeatures() {
   return (
-    <section className="snap-start min-h-screen bg-lxj-softWhite py-28 md:py-40 px-6 md:px-12 font-inter">
+    <section id="features" className="snap-start min-h-screen bg-lxj-softWhite py-28 md:py-40 px-6 md:px-12 font-inter">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-4xl md:text-5xl font-extrabold text-lxj-primary mb-4">Key Features</h2>
         <p className="text-lg text-lxj-alert mb-12">

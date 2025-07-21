@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import CollapsibleSection from '../components/ui/CollapsibleSection';
+import { useNavigate } from 'react-router-dom'; // Add this import
+import CollapsibleSection from '../components/ui/collapsible_section';
 
 export default function TransporterDashboard() {
+  const navigate = useNavigate(); // Add this line
+
   const transporterData = {
     companyName: 'FastMove Logistics Pvt Ltd',
     companyAddress: 'Plot 23, Industrial Area, Sector 88, Noida, UP - 201301',
@@ -23,42 +26,44 @@ export default function TransporterDashboard() {
   const fallbackImage = 'https://www.w3schools.com/howto/img_avatar.png';
   const profileImage = transporterData.image || fallbackImage;
 
-
-// Tabs State
-const [activeTab, setActiveTab] = useState('POC');
-// Dynamic tab content from transporterData
-const tabDetails = {
-  POC: [
-    { label: 'Name', value: transporterData.POCName || 'N/A' },
-    { label: 'Contact', value: transporterData.POCContact || 'N/A' },
-  ],
-  Owner: [
-    { label: 'Name', value: transporterData.ownerName || 'N/A' },
-    { label: 'Contact', value: transporterData.ownerContact || 'N/A' },
-  ],
-  Company: [
-    { label: 'Email', value: transporterData.companyEmail || 'N/A' },
-    { label: 'Fleet Count', value: transporterData.fleetCount || 'N/A' },
-    { label: 'Service Area', value: transporterData.serviceArea || 'N/A' },
-  ],
-};
-
-
+  // Tabs State
+  const [activeTab, setActiveTab] = useState('POC');
+  // Dynamic tab content from transporterData
+  const tabDetails = {
+    POC: [
+      { label: 'Name', value: transporterData.POCName || 'N/A' },
+      { label: 'Contact', value: transporterData.POCContact || 'N/A' },
+    ],
+    Owner: [
+      { label: 'Name', value: transporterData.ownerName || 'N/A' },
+      { label: 'Contact', value: transporterData.ownerContact || 'N/A' },
+    ],
+    Company: [
+      { label: 'Email', value: transporterData.companyEmail || 'N/A' },
+      { label: 'Fleet Count', value: transporterData.fleetCount || 'N/A' },
+      { label: 'Service Area', value: transporterData.serviceArea || 'N/A' },
+    ],
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 sm:p-10">
-      <div className="max-w-7xl mx-auto bg-white shadow-md rounded-xl p-6 sm:p-10">
-
+    <div className=" min-h-screen bg-gray-100 p-6 sm:p-10">
+      <div className="mt-15 max-w-7xl mx-auto bg-white shadow-md rounded-xl p-6 sm:p-10">
         {/* Header */}
         <div className="flex flex-col py-4 border-b sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <div className="text-2xl sm:text-3xl font-bold text-gray-800 text-center sm:text-left">
             Transporter Profile
           </div>
           <div className="flex flex-wrap justify-center sm:justify-end gap-4">
-            <button className="border-2 border-blue-600 text-black font-semibold px-6 py-2 rounded-lg shadow-sm hover:shadow-lg hover:text-blue-700 hover:bg-blue-50 transform transition-all duration-200">
+            <button
+              className="border-2 border-blue-600 text-black font-semibold px-6 py-2 rounded-lg shadow-sm hover:shadow-lg hover:text-blue-700 hover:bg-blue-50 transform transition-all duration-200"
+              onClick={() => navigate('/consignment')}
+            >
               Consignments
             </button>
-            <button className="border-2 border-blue-600 text-black font-semibold px-6 py-2 rounded-lg shadow-sm hover:shadow-lg hover:text-blue-700 hover:bg-blue-50 transform transition-all duration-200">
+            <button
+              className="border-2 border-blue-600 text-black font-semibold px-6 py-2 rounded-lg shadow-sm hover:shadow-lg hover:text-blue-700 hover:bg-blue-50 transform transition-all duration-200"
+              onClick={() => navigate('/shipments')}
+            >
               Shipment History
             </button>
           </div>
@@ -100,8 +105,6 @@ const tabDetails = {
               </div>
             </div>
           </div>
-
-          
         </div>
 
         {/* -------- TABS SECTION (Add Above Edit Button) -------- */}
@@ -136,7 +139,6 @@ const tabDetails = {
           </div>
         </div>
 
-
         {/* Edit Button */}
         <div className="flex flex-wrap justify-end items-center mt-4">
           <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
@@ -148,7 +150,7 @@ const tabDetails = {
         <CollapsibleSection
           title="Registered Vehicles"
           items={['Truck - UP32AB1234', 'Trailer - HR55XY9876']}
-          onAdd={() => alert('Redirect to vehicle registration page')}
+          onAdd={() => navigate('/vehicle-registration')}
           onEdit={(item, i) => console.log('Edit', item)}
           onDelete={(item, i) => console.log('Delete', item)}
         />
@@ -156,7 +158,7 @@ const tabDetails = {
         <CollapsibleSection
           title="Registered Drivers"
           items={['Amit Kumar', 'Rohan Singh']}
-          onAdd={() => alert('Redirect to driver registration page')}
+          onAdd={() => navigate('/driver-registration')}
           onEdit={(item, i) => console.log('Edit', item)}
           onDelete={(item, i) => console.log('Delete', item)}
         />

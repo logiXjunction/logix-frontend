@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Truck, Boxes } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import TransporterCard from '../components/cards/TransporterCard';
+import TransporterCard from '../components/cards/transporter_card';
 
 
 const AvailableTransporters = () => {
@@ -15,7 +15,7 @@ const AvailableTransporters = () => {
 
   if(!location.state || !Array.isArray(transporters) || transporters.length === 0 ){
     return (
-      <div className="p-10 text-center text-red-600 text-lg font-semibold min-h-screen bg-gradient-to-br from-zinc-50 via-sky-100 to-white">
+      <div className="mt-15 p-10 text-center text-red-600 text-lg font-semibold min-h-screen bg-gradient-to-br from-zinc-50 via-sky-100 to-white">
         ❌ No shipment data found. Please register a shipment first.
       </div>
     );
@@ -37,7 +37,7 @@ const AvailableTransporters = () => {
   });
 
   return (
-    <div className="p-6 bg-gradient-to-br from-zinc-50 via-sky-100 to-white min-h-screen">
+    <div className="mt-15 p-6 bg-gradient-to-br from-zinc-50 via-sky-100 to-white min-h-screen">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-[#0a2463] mb-6">Available Transporters</h1>
 

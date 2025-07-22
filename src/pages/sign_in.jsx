@@ -67,7 +67,7 @@ export default function SignInPage() {
         <div className="flex justify-center mb-6">
           <button
             type="button"
-            className={`px-6 py-2 rounded-l-md border border-[#3e92cc] font-semibold focus:outline-none transition-all duration-200 ${
+            className={`cursor-pointer px-6 py-2 rounded-l-md border border-[#3e92cc] font-semibold focus:outline-none transition-all duration-200 ${
               userType === 'Transporter'
                 ? 'bg-[#3e92cc] text-white'
                 : 'bg-white text-[#3e92cc]'
@@ -78,7 +78,7 @@ export default function SignInPage() {
           </button>
           <button
             type="button"
-            className={`px-6 py-2 rounded-r-md border border-[#3e92cc] font-semibold focus:outline-none transition-all duration-200 -ml-px ${
+            className={`cursor-pointer  px-6 py-2 rounded-r-md border border-[#3e92cc] font-semibold focus:outline-none transition-all duration-200 -ml-px ${
               userType === 'Shipper'
                 ? 'bg-[#3e92cc] text-white'
                 : 'bg-white text-[#3e92cc]'
@@ -133,7 +133,7 @@ export default function SignInPage() {
 
           <button
             type="submit"
-            className="w-full py-2 mt-2 bg-[#0a2463] text-white font-medium rounded-md hover:bg-[#3e92cc] transition-all duration-200"
+            className="cursor-pointer  w-full py-2 mt-2 bg-[#0a2463] text-white font-medium rounded-md hover:bg-[#3e92cc] transition-all duration-200"
           >
             Log in
           </button>
@@ -141,7 +141,7 @@ export default function SignInPage() {
           {/* Google Login Button */}
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-2 py-2 mt-4 border border-[#ccc] bg-white text-[#1e1b18] font-medium rounded-md hover:bg-[#f5f5f5] transition-all duration-200 shadow-sm"
+            className="cursor-pointer  w-full flex items-center justify-center gap-2 py-2 mt-4 border border-[#ccc] bg-white text-[#1e1b18] font-medium rounded-md hover:bg-[#f5f5f5] transition-all duration-200 shadow-sm"
             onClick={() => alert('Google login coming soon!')}
           >
             <svg
@@ -184,7 +184,7 @@ export default function SignInPage() {
               <span>
                 <button
                   type="button"
-                  className="hover:text-[#d8315b] focus:outline-none"
+                  className="cursor-pointer  hover:text-[#d8315b] focus:outline-none"
                   onClick={() => navigate(`/sign-up?userType=${userType}`)}
                 >
                   Create account →

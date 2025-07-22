@@ -159,7 +159,7 @@ export default function VehicleRegistration() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
+    <div className="pt-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Form Header */}
@@ -258,7 +258,7 @@ export default function VehicleRegistration() {
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition-all duration-200"
+                className="cursor-pointer bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition-all duration-200"
               >
                 + Add Vehicle
               </button>
@@ -279,7 +279,7 @@ export default function VehicleRegistration() {
                       <button
                         type="button"
                         onClick={() => handleRemoveVehicle(idx)}
-                        className="text-red-600 hover:text-red-800 ml-4"
+                        className="cursor-pointer text-red-600 hover:text-red-800 ml-4"
                         title="Remove"
                       >
                         <Trash2 className="h-5 w-5" />
@@ -295,7 +295,7 @@ export default function VehicleRegistration() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 w-full"
+                className="cursor-pointer bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 w-full"
               >
                 {isSubmitting ? (
                   <div className="flex items-center space-x-2 justify-center">
@@ -312,7 +312,7 @@ export default function VehicleRegistration() {
               <button
                 type="button"
                 onClick={() => navigate('/driver-registration')}
-                className="bg-gray-100 text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 w-full border border-blue-200"
+                className="cursor-pointer bg-gray-100 text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 w-full border border-blue-200"
               >
                 Skip
               </button>

@@ -77,7 +77,7 @@ export default function SignupFormPage() {
                       onChange={(e) => setPhone(e.target.value)}
                       className="flex-1"
                     />
-                    <Button type="button" onClick={handleSendOtp} className="bg-[#3e92cc] hover:bg-[#0a2463] text-white">
+                    <Button type="button" onClick={handleSendOtp} className="cursor-pointer  bg-[#3e92cc] hover:bg-[#0a2463] text-white">
                       Send OTP
                     </Button>
                   </div>
@@ -119,7 +119,7 @@ export default function SignupFormPage() {
                 <Button
                   type="submit"
                   disabled={!otpVerified}
-                  className="w-full bg-[#d8315b] hover:bg-[#a81e3e] text-white font-semibold"
+                  className="cursor-pointer w-full bg-[#d8315b] hover:bg-[#a81e3e] text-white font-semibold"
                 >
                   Submit
                 </Button>

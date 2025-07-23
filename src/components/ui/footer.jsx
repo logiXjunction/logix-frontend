@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Twitter, Linkedin, Instagram, ArrowUp } from 'lucide-react';
+import { Twitter, Linkedin, Instagram, ArrowUp,} from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Footer() {
+  const navigate = useNavigate();
+
   const [email,setEmail] = useState('');
   const [status,setStatus] = useState(null);
 
@@ -11,6 +14,14 @@ export default function Footer() {
       behavior:'smooth',
     });
   };
+
+  const scrollAndNavigate = (to) => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setTimeout(() => {
+      navigate(to);
+    }, 0);
+  };
+  
 
   const handleSubscribe = async() =>{
     if(!email){
@@ -70,13 +81,13 @@ export default function Footer() {
         {/* Our Story */}
         <div>
           <h4 className="font-bold text-lg mb-3">OUR STORY</h4>
-          <a href="about-us" className="hover:text-[#1DA1F2]">About Us</a>
+          <Link onClick={() => scrollAndNavigate("/about-us")} className="hover:text-[#1DA1F2]">About Us</Link>
         </div>
 
         {/* Insights */}
         <div>
           <h4 className="font-bold text-lg mb-3">INSIGHTS</h4>
-          <a href="/join-us" className="hover:text-[#1DA1F2]">Careers</a>
+          <Link onClick={() => scrollAndNavigate("/join-us")} className="hover:text-[#1DA1F2]">Careers</Link >
         </div>
       </div>
 

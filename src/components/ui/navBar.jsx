@@ -4,7 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'; // Update import
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate(); 
+  const scrollAndNavigate = (to) => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setTimeout(() => {
+      navigate(to);
+    }, 0);
+  };
 
   return (
     <nav className="fixed top-2 left-2 right-2 z-50 bg-white/40 backdrop-blur-md border border-white/30 shadow-lg px-6 py-3 flex items-center justify-between rounded-none md:rounded-full">
@@ -15,14 +21,15 @@ export default function Navbar() {
           <img src="/LOGO.png" alt="LxJ" />
         </span>
         <div className="hidden md:flex space-x-6  text-neutral-800 font-semibold">
-          <a href="/" className="hover:text-[#8bb5f4] transition">Home</a>
-          <button
+          <Link onClick={()=>scrollAndNavigate("/")} className="hover:text-[#8bb5f4] transition">Home</Link>
+          
+          <Link
             className="hover:text-[#8ec5ff] transition bg-transparent"
-            onClick={() => navigate('/about-us')}
+            onClick={()=>scrollAndNavigate("/about-us")}
           >
             Our Story
-          </button>
-          <a href="/join-us" className="hover:text-[#9193ad] transition">Join Us</a>
+          </Link>
+          <Link onClick={()=>scrollAndNavigate("/join-us")} className="hover:text-[#9193ad] transition">Join Us</Link>
         </div>
       </div>
 
@@ -32,14 +39,14 @@ export default function Navbar() {
       {/* Right Section */}
       <div className="hidden md:flex items-center space-x-4">
         {/* Sign In + Get Started */}
-        <a href="/sign-in">
+        <Link onClick={()=>scrollAndNavigate("/sign-in")}>
           <button className="text-neutral-800 hover:text-[#d8315b] transition font-semibold">Sign In</button>
-        </a>
-        <a href="/signup-otp">
+        </Link>
+        <Link onClick={()=>scrollAndNavigate("/signup-otp")}>
           <button className="bg-[#d8315b] hover:bg-[#b92549] text-white px-4 py-2 rounded-full text-sm font-semibold shadow">
             Get Started
           </button>
-        </a>
+        </Link>
 
         {/* Search Bar */}
         {/* 
@@ -81,14 +88,14 @@ export default function Navbar() {
 
         {/* Auth Buttons */}
         <div className="flex flex-col items-center space-y-3">
-          <a href="/sign-in">
+          <Link to="/sign-in">
             <button className="text-neutral-900 hover:text-[#3e92cc] font-semibold">Sign In</button>
-          </a>
-          <a href="#features">
+          </Link>
+          <Link to="about-us">
             <button className="bg-[#d8315b] hover:bg-[#b92549] text-white px-4 py-2 rounded-full text-sm font-semibold shadow">
               Get Started
             </button>
-          </a>
+          </Link>
         </div>
 
         <hr className="my-4 border-white/30" />

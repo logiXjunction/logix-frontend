@@ -55,7 +55,7 @@ export default function SignupFormPage() {
 
         {/* right section - form  */}
         <div className="min-h-screen flex-1 mt-22 ml-8 justify-center  bg-[#fffaff] p-4">
-            <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-[#EEE8A9]">
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 space-y-6 ">
               <h2 className="text-2xl font-bold text-center text-[#0a2463]">Register as {role}</h2>
               <div className="flex items-center justify-center gap-4">
                 <span className={`font-medium ${role === 'shipper' ? 'text-[#d8315b]' : ''}`}>Shipper</span>

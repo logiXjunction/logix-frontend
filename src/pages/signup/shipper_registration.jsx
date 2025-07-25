@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Add this import
+import { Link, useNavigate } from 'react-router-dom'; // Add this import
 import { Package, Building, Users, User, Phone, Mail, MapPin } from 'lucide-react';
+import axios from '../../utils/axios'
+
 
 // Reusable Input Component
 const InputField = ({ 
@@ -77,22 +79,23 @@ const FormSection = ({ icon: Icon, title, children }) => (
 // Main Shipper Signup Component
 export default function ShipperSignup() {
   const [formData, setFormData] = useState({
-    companyName: '',
-    companyGst: '',
-    companyEmail: '',
-    companyAddress: '',
-    pocName: '',
-    pocDesignation: '',
-    pocContact: '',
-    ownerName: '',
-    ownerContact: '',
+    name: '',
+    email: '',
+    mobileNumber: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    designation: '',
+    companyName: '',
+    gstNumber: '',    
+    companyAddress: '',
+    ownerName: '',
+    ownerContact: ''    
   });
   const [gstVerified, setGstVerified] = useState(false);
   const [gstVerifying, setGstVerifying] = useState(false);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState('');
   const navigate = useNavigate(); // Add this line
 
   // Form configuration for scalability
@@ -110,7 +113,7 @@ export default function ShipperSignup() {
           gridCols: 'md:col-span-2'
         },
         {
-          name: 'companyGst',
+          name: 'gstNumber',
           label: 'Company GST',
           type: 'text',
           placeholder: 'GST Number',
@@ -118,7 +121,7 @@ export default function ShipperSignup() {
           gridCols: 'md:col-span-1'
         },
         {
-          name: 'companyEmail',
+          name: 'email',
           label: 'Company Email',
           type: 'email',
           placeholder: 'company@example.com',
@@ -141,7 +144,7 @@ export default function ShipperSignup() {
       icon: User,
       fields: [
         {
-          name: 'pocName',
+          name: 'name',
           label: 'POC Name',
           type: 'text',
           placeholder: 'Enter POC name',
@@ -149,7 +152,7 @@ export default function ShipperSignup() {
           gridCols: 'md:col-span-1'
         },
         {
-          name: 'pocDesignation',
+          name: 'designation',
           label: 'POC Designation',
           type: 'text',
           placeholder: 'Enter designation',
@@ -157,7 +160,7 @@ export default function ShipperSignup() {
           gridCols: 'md:col-span-1'
         },
         {
-          name: 'pocContact',
+          name: 'mobileNumber',
           label: 'POC Contact Number',
           type: 'tel',
           placeholder: '+91 XXXXXXXXXX',
@@ -193,13 +196,19 @@ export default function ShipperSignup() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
-    if (name === 'companyGst') {
+    if (name === 'gstNumber') {
       // Remove all spaces
       let raw = value.replace(/\s+/g, '');
       // Limit to 15 characters
       if (raw.length > 15) raw = raw.slice(0, 15);
       // Insert a space after every 4 characters
       newValue = raw.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    // handle mobile number formatting
+    if(name === 'mobileNumber' || name === 'ownerContact'){
+      newValue = value.replace(/\D/g, '');
+      if(newValue.length > 10) newValue = newValue.slice(0,10);
     }
     setFormData(prev => ({
       ...prev,
@@ -216,50 +225,71 @@ export default function ShipperSignup() {
 
   const handleGstVerify = async () => {
     setGstVerifying(true);
-    // TODO: Replace with real GST verification API call
-    setTimeout(() => {
+    
+    try{
+      // TODO: Replace with actual API call to verify GST
+      // for now , we'll simulate a successful verification
+      await new Promise(resolve => setTimeout(resolve,3000));
       setGstVerified(true);
+      alert( 'GST number verified successfully!');
+    }catch(error){
+      alert('GST number verification failed!');
+    }finally{
       setGstVerifying(false);
-      alert('GST number verified!');
-    }, 1000);
+    }
   };
 
   const validateForm = () => {
     const newErrors = {};
     
-    // Get all required fields from config
-    const requiredFields = [];
-    Object.values(formConfig).forEach(section => {
-      section.fields.forEach(field => {
-        if (field.required) {
-          requiredFields.push({
-            name: field.name,
-            label: field.label,
-            type: field.type
-          });
-        }
-      });
-    });
+    // required api fields validation 
+    const requiredApiFields = [
+      {name: 'email', label: 'Email'},
+      {name: 'mobileNumber', label: 'Mobile Number'},
+      {name: 'password', label: 'Password'},
+      {name: 'designation', label: 'Designation'},
+      {name: 'companyName', label: 'Company Name'},
+      {name: 'gstNumber', label: 'GST Number'},
+    ]
 
-    // Validate required fields
-    requiredFields.forEach(field => {
-      if (!formData[field.name]) {
-        newErrors[field.name] = `${field.label} is required`;
+    requiredApiFields.forEach(fields => {
+      if(!formData[fields.name]) {
+        newErrors[fields.name] = `${fields.label} is required`;
       }
-    });
+    })
+
+    // Additional form fields that are required in UI but not API
+    if(!formData.name)newErrors.name = 'POC name is required';
+    if(!formData.companyAddress)newErrors.companyAddress = 'Company address is required';
     
     // Email validation
-    if (formData.companyEmail && !/\S+@\S+\.\S+/.test(formData.companyEmail)) {
-      newErrors.companyEmail = 'Please enter a valid email address';
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
+
+    // Mobile Number validation
+    if (formData.mobileNumber && !/^\+?\d{10,15}$/.test(formData.mobileNumber)) {
+      newErrors.mobileNumber = 'Please enter a valid mobile number';
+    }  
     
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm password is required';
-    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
-    if (!formData.companyGst) newErrors.companyGst = 'GST number is required';
-    else if (formData.companyGst.replace(/\s+/g, '').length !== 15) newErrors.companyGst = 'GST number must be 15 characters';
-    if (!gstVerified) newErrors.companyGst = 'GST number must be verified';
-    
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    }else if (formData.password.length < 6){
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Confirm password is required';
+    }else if (formData.password !== formData.confirmPassword){
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (!formData.gstNumber) newErrors.gstNumber = 'GST number is required';
+    else if (formData.gstNumber.replace(/\s+/g, '').length !== 15) newErrors.gstNumber = 'GST number must be 15 characters';
+    if (!gstVerified) newErrors.gstNumber = 'GST number must be verified';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -268,27 +298,53 @@ export default function ShipperSignup() {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      alert('Shipper registration submitted successfully! We will review your application and get back to you within 24-48 hours.');
+    setApiError('');
+
+    try{
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        mobileNumber: formData.mobileNumber,
+        password: formData.password,
+        designation: formData.designation,
+        companyName:formData.companyName,
+        gstNumber:formData.gstNumber.replace(/\s+/g, '')        
+      };
+
+      console.log('sending data to api', payload);
+
+      const response = await axios.post('/api/shipper/signup' , payload);
+
+      console.log('API Response:', response.data);
+
+      if(response.data.success){
+        alert(`Registration successful! Welcome ${response.data.data.name}. we will review your application in 24-48 hours.`);
+        
+        setFormData({
+          name: '',
+          email: '',
+          mobileNumber: '',
+          password: '',
+          confirmPassword: '',
+          designation: '',
+          companyName: '',
+          gstNumber: '',
+          companyAddress: '',
+          ownerName: '',
+          ownerContact: ''
+        })
+        
+        setGstVerified(false);
+        navigate('/client-dashboard'); // Redirect to client dashboard
+      }else {
+        setApiError(response.data.message || 'Registration failed. Please try again later.');
+      }
+    }catch(error){
+      console.error('API Error:', error);
+      setApiError('An error occurred while submitting the form. Please try again later.');
+    }finally{
       setIsSubmitting(false);
-      // Reset form
-      setFormData({
-        companyName: '',
-        companyGst: '',
-        companyEmail: '',
-        companyAddress: '',
-        pocName: '',
-        pocDesignation: '',
-        pocContact: '',
-        ownerName: '',
-        ownerContact: '',
-        password: '',
-        confirmPassword: ''
-      });
-      navigate('/client-dashboard'); // Navigate to client dashboard
-    }, 2000);
+    }
   };
 
   // Render top fields first: Phone, Email, Password, Confirm Password, GST
@@ -297,11 +353,11 @@ export default function ShipperSignup() {
       <div>
         <InputField
           label="Phone Number"
-          name="pocContact"
+          name="mobileNumber"
           type="tel"
-          value={formData.pocContact}
+          value={formData.mobileNumber}
           onChange={handleInputChange}
-          error={errors.pocContact}
+          error={errors.mobileNumber}
           placeholder="+91 XXXXXXXXXX"
           required
         />
@@ -309,11 +365,11 @@ export default function ShipperSignup() {
       <div>
         <InputField
           label="Email"
-          name="companyEmail"
+          name="email"
           type="email"
-          value={formData.companyEmail}
+          value={formData.email}
           onChange={handleInputChange}
-          error={errors.companyEmail}
+          error={errors.email}
           placeholder="company@example.com"
           required
         />
@@ -361,24 +417,24 @@ export default function ShipperSignup() {
         <div className="flex gap-2">
           <input
             type="text"
-            name="companyGst"
-            value={formData.companyGst}
+            name="gstNumber"
+            value={formData.gstNumber}
             onChange={handleInputChange}
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-              errors.companyGst ? 'border-red-300' : 'border-gray-300'
+              errors.gstNumber ? 'border-red-300' : 'border-gray-300'
             }`}
             placeholder="GST Number"
           />
           <button
   type="button"
   onClick={handleGstVerify}
-  disabled={gstVerifying || !formData.companyGst}
+  disabled={gstVerifying || !formData.gstNumber}
   className={`px-3 py-2 rounded-lg font-semibold
     ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}
-    ${gstVerifying || !formData.companyGst ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+    ${gstVerifying || !formData.gstNumber ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
   `}
   title={
-    !formData.companyGst
+    !formData.gstNumber
       ? 'Enter GST number to verify'
       : gstVerifying
       ? 'Verifying GST...'
@@ -389,8 +445,8 @@ export default function ShipperSignup() {
 </button>
 
         </div>
-        {errors.companyGst && (
-          <p className="mt-1 text-sm text-red-600">{errors.companyGst}</p>
+        {errors.gstNumber && (
+          <p className="mt-1 text-sm text-red-600">{errors.gstNumber}</p>
         )}
       </div>
     </div>
@@ -409,25 +465,25 @@ export default function ShipperSignup() {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    name="companyGst"
-                    value={formData.companyGst}
+                    name="gstNumber"
+                    value={formData.gstNumber}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.companyGst ? 'border-red-300' : 'border-gray-300'
+                      errors.gstNumber ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder={field.placeholder}
                   />
                   <button
                     type="button"
                     onClick={handleGstVerify}
-                    disabled={gstVerifying || !formData.companyGst}
+                    disabled={gstVerifying || !formData.gstNumber}
                     className={`cursor-pointer px-3 py-2 rounded-lg font-semibold ${gstVerified ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'} ${gstVerifying ? 'opacity-50' : ''}`}
                   >
                     {gstVerifying ? 'Verifying...' : gstVerified ? 'Verified' : 'Verify'}
                   </button>
                 </div>
-                {errors.companyGst && (
-                  <p className="mt-1 text-sm text-red-600">{errors.companyGst}</p>
+                {errors.gstNumber && (
+                  <p className="mt-1 text-sm text-red-600">{errors.gstNumber}</p>
                 )}
               </div>
             );
@@ -563,7 +619,7 @@ export default function ShipperSignup() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-gray-600">
-          <p>Already have an account? <a href="#" className="text-blue-600 hover:underline">Sign in here</a></p>
+          <p>Already have an account? <Link to="/sign-in" className="text-blue-600 hover:underline">Sign in here</Link></p>
           <p className="mt-2 text-sm">Need help? Contact us at <a href="mailto:support@logixjunction.com" className="text-blue-600 hover:underline">support@logixjunction.com</a></p>
         </div>
       </div>

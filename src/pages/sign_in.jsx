@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from '../utils/axios';
 
 export default function SignInPage() {
   const [userType, setUserType] = useState('Transporter');
@@ -48,28 +49,23 @@ export default function SignInPage() {
 
     const endpoint =
       userType === 'Transporter'
-        ? 'https://bakcendrepo-1.onrender.com/api/transporters/login'
-        : 'https://bakcendrepo-1.onrender.com/api/shipper/login';
+        ? '/api/transporters/login'
+        : '/api/shipper/login';
 
     try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const res = await axios.post(endpoint, payload);
 
-      const data = await res.json();
-
-      if (res.ok) {
+      if (res.status === 200) {
         alert('Login successful');
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(res.data.data));
         navigate(
           userType === 'Transporter'
             ? '/transporter-dashboard'
             : '/client-dashboard'
         );
       } else {
-        alert(data.message || 'Invalid credentials');
+        alert(res.data.message || 'Invalid credentials');
       }
     } catch (err) {
       console.error('Login error:', err);

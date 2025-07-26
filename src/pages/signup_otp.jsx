@@ -4,38 +4,67 @@ import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import OtpInput from '../components/otp_input';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axios';
+
 
 export default function SignupFormPage() {
   const [role, setRole] = useState('shipper');
-  const [phone, setPhone] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [email, setEmail] = useState('');
   const [gst, setGst] = useState('');
   const [showOtp, setShowOtp] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your backend submission logic
-    
+  const handleSubmit = async (e) => {
+    e.preventDefault();    
     if(!otpVerified) {
       alert('Please verify your OTP before submitting');
       return;
     }
 
-    if(role=== 'shipper') {
+    try{
+      const res= await axios.post('/api/register-user',{
+        role,
+        mobileNumber,
+        email,
+        gst
+      });
+
+      if(res.data.success){
+        alert('Registration successful!');
+
+      if(role=== 'shipper') {
       navigate('/shipper-registration');
-    }else {
-      navigate('/carrier-registration');
-    }
+       }else {
+         navigate('/carrier-registration');
+       }
+      } 
+    }catch{
+      alert('Registration failed. Please try again later.');
+    }    
   };
 
-  const handleSendOtp = () => {
-    if (phone.match(/^\d{10}$/)) {
-      setShowOtp(true);
-    } else {
-      alert('Enter valid 10-digit phone number');
+  const handleSendOtp = async () => {
+    if(!mobileNumber.match(/^\d{10}$/)){
+      alert('Please enter a valid 10-digit mobile number');
+      return;
+    }
+
+    try{
+      const res =  await axios.post('/api/validate/send-otp',{ 
+        mobileNumber: '+91' + mobileNumber
+      });
+
+      if(res.data.success){
+        setShowOtp(true);
+        alert('OTP sent successfully! Please check your messages.');
+      }else {
+        alert('Failed to send OTP. Please try again.');
+      }
+    }catch(error){
+      console.error('Error sending OTP:', error);
+      alert('An error occurred while sending the OTP. Please try again later.');
     }
   };
 
@@ -72,9 +101,9 @@ export default function SignupFormPage() {
                   <div className="flex gap-2">
                     <Input
                       type="tel"
-                      placeholder="Enter 10-digit phone"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Enter 10-digit mobile number"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
                       className="flex-1"
                     />
                     <Button type="button" onClick={handleSendOtp} className="cursor-pointer  bg-[#3e92cc] hover:bg-[#0a2463] text-white">
@@ -84,7 +113,7 @@ export default function SignupFormPage() {
                 </div>
 
                 {showOtp && !otpVerified && (
-                  <OtpInput onVerify={() => setOtpVerified(true)} />
+                  <OtpInput mobileNumber={mobileNumber} onVerify={() => setOtpVerified(true)} />
                 )}
 
                 <div>

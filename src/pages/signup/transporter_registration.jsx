@@ -33,20 +33,40 @@ export default function CarrierSignup() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
-    if (name === 'gstNumber') {
-      // Remove all spaces
-      let raw = value.replace(/\s+/g, '');
-      // Limit to 15 characters
-      if (raw.length > 15) raw = raw.slice(0, 15);
-      // Insert a space after every 4 characters
-      newValue = raw.replace(/(.{4})/g, '$1 ').trim();
+  
+    switch (name) {
+      case 'gstNumber': {
+        let raw = value.replace(/\s+/g, '');
+        if (raw.length > 15) raw = raw.slice(0, 15);
+        newValue = raw.replace(/(.{4})/g, '$1 ').trim();
+        break;
+      }
+  
+      case 'customerServiceNumber':
+      case 'ownerContact': {
+        newValue = value.replace(/\D/g, '');
+        if (newValue.length > 10) newValue = newValue.slice(0, 10);
+        break;
+      }
+  
+      case 'ownerName': {
+        // Allow only letters, hyphens, and single spaces between words
+        newValue = value
+          .replace(/[^a-zA-Z\- ]/g, '') // Remove invalid chars
+          .replace(/\s{2,}/g, ' ')      // Replace multiple spaces with one
+          .trimStart();                 // Prevent leading whitespace
+        break;
+      }
+  
+      default:
+        break;
     }
+  
     setFormData(prev => ({
       ...prev,
       [name]: newValue
     }));
-
-    // Clear error when user starts typing
+  
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -54,6 +74,7 @@ export default function CarrierSignup() {
       }));
     }
   };
+  
 
   const handleGstVerify = async () => {
     setGstVerifying(true);

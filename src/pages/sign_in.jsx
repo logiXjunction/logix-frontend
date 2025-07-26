@@ -6,6 +6,7 @@ export default function SignInPage() {
   const [userType, setUserType] = useState('Transporter');
   const [contact, setContact] = useState('');
   const [password, setPassword] = useState('');
+  const [contactError, setContactError] = useState('');
   const navigate = useNavigate();
 
   const handleUserSignUp = () => {
@@ -16,8 +17,36 @@ export default function SignInPage() {
     }
   }
 
+  const validateForm = () => {
+    setContactError(''); // Clear previous error
+  
+    if (!contact.trim() || !password.trim()) {
+      setContactError("All fields are required");
+      return false;
+    }
+  
+    const phoneRegex = /^(\+91[\-\s]?)?[6-9]\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    if (contact.includes('@')) {
+      if (!emailRegex.test(contact)) {
+        setContactError("Please enter a valid mobile number or email");
+        return false;
+      }
+    } else {
+      if (!phoneRegex.test(contact)) {
+        setContactError("Please enter a valid mobile number or email");
+        return false;
+      }
+    }
+  
+    return true;
+  };
+  
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
     const payload = {
       password,
@@ -114,6 +143,9 @@ export default function SignInPage() {
             <label className="absolute left-4 top-2 text-sm text-[#1e1b18] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#888] peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#3e92cc]">
               Email or mobile number
             </label>
+            {contactError && (
+    <p className="text-red-500 text-sm mt-1 ml-1">{contactError}</p>
+  )}
           </div>
 
           <div className="relative">

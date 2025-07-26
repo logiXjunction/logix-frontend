@@ -30,26 +30,33 @@ function App() {
       <Navbar />
       <Routes>
         {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/landing" element={<LandingPage />} />
+
+
         <Route path="/" element={<LandingPage />} />
-        <Route path="/transporter-dashboard" element={<TransporterDashboard />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/join-us" element={<Careers />} />
+        <Route path="/careers" element={<Careers />} />
+
+
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/signup-otp" element={<SignupFormPage />} />
         <Route path="/carrier-registration" element={<CarrierRegistration />} />
         <Route path="/shipper-registration" element={<ShipperRegistration />} />
+
+
+        <Route path="/transporter-dashboard" element={<TransporterDashboard />} />        
         <Route path="/shipments" element={<Shipments />} />
         <Route path="/consignment" element={<Consignment />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/careers" element={<Careers />} />
-        <Route path="/join-us" element={<Careers />} />
-        <Route path="/client-dashboard" element={<ClientDashboard />} />
-        <Route path="/available-transporter" element={<AvailableTransporters />} />
-        <Route path="/shipment-registration" element={<ShipmentRegistration />} />
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/landing" element={<LandingPage />} />
-        
-        <Route path="/signup-otp" element={<SignupFormPage />} />
         <Route path="/vehicle-registration" element={<VehicleRegistration />} />
         <Route path="/driver-registration" element={<DriverRegistration />} />
-        <Route path="/carrier-registration" element={<CarrierRegistration />} />
-        <Route path="/shipper-registration" element={<ShipperRegistration />} />
+        
+        
+        <Route path="/client-dashboard" element={<ClientDashboard />} />
+        <Route path="/available-transporter" element={<AvailableTransporters />} />
+        <Route path="/shipment-registration" element={<ShipmentRegistration />} />        
+        
+        
       </Routes>
       <Footer/>
     </Router>

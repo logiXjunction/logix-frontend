@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
 
 export default function SignInPage() {
@@ -8,6 +8,14 @@ export default function SignInPage() {
   const [password, setPassword] = useState('');
   const [contactError, setContactError] = useState('');
   const navigate = useNavigate();
+
+  const handleUserSignUp = () => {
+    if(userType === 'Transporter') {
+      navigate('/carrier-registration');
+    } else if(userType === 'Shipper') {
+      navigate('/shipper-registration');
+    }
+  }
 
   const validateForm = () => {
     setContactError(''); // Clear previous error
@@ -74,7 +82,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fffaff] flex flex-col md:flex-row items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-[#fffaff] flex flex-col md:flex-row items-center justify-center px-6 py-12 mt-12">
       {/* Left Side - Company Motto */}
       <div className="w-full md:w-1/2 flex flex-col justify-center mb-12 md:mb-0 md:pr-10">
         <img src="/LOGO_LxJ2.png" className="h-20 w-24" />
@@ -88,6 +96,10 @@ export default function SignInPage() {
 
       {/* Right Side - Login Form */}
       <div className="w-full md:w-1/2 max-w-md bg-white shadow-xl rounded-2xl p-8 border border-[#eee] hover:shadow-2xl transition-all duration-300">
+          <h2 className="text-2xl font-bold text-center text-[#0a2463]">
+            Register as {userType}
+          </h2>
+          <br />
         {/* Toggle Button for User Type */}
         <div className="flex justify-center mb-6">
           <button
@@ -213,7 +225,7 @@ export default function SignInPage() {
                 <button
                   type="button"
                   className="cursor-pointer  hover:text-[#d8315b] focus:outline-none"
-                  onClick={() => navigate(`/signup-otp?userType=${userType}`)}
+                  onClick={handleUserSignUp}
                 >
                   Create account →
                 </button>

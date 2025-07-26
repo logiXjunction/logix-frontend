@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { Package, Truck, FileText, Hash, Ruler, Layers, ClipboardList, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-// Reusable Input Component (copied from signup for consistency)
-const InputField = ({ 
-  label, 
-  name, 
-  type = 'text', 
-  value, 
-  onChange, 
-  error, 
-  placeholder, 
+// Reusable Input Component
+const InputField = ({
+  label,
+  name,
+  type = 'text',
+  value,
+  onChange,
+  error,
+  placeholder,
   required = false,
   rows = null,
   options = null,
@@ -20,7 +20,7 @@ const InputField = ({
 }) => {
   const baseClasses = "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors";
   const errorClasses = error ? "border-red-300" : "border-gray-300";
-  
+
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -67,16 +67,6 @@ const InputField = ({
   );
 };
 
-const FormSection = ({ icon: Icon, title, children }) => (
-  <div className="space-y-6">
-    <div className="flex items-center space-x-3 mb-4">
-      <Icon className="h-5 w-5 text-blue-600" />
-      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-    </div>
-    {children}
-  </div>
-);
-
 const initialVehicle = {
   vehicleName: '',
   dimensions: '',
@@ -85,7 +75,9 @@ const initialVehicle = {
   vehicleNumber: '',
   rc: null,
   roadPermit: null,
-  pollution: null
+  pollution: null,
+  enclosureType: '',
+  refrigerationStatus: ''
 };
 
 const vehicleTypeOptions = [
@@ -94,6 +86,16 @@ const vehicleTypeOptions = [
   { value: 'container', label: 'Container' },
   { value: 'tanker', label: 'Tanker' },
   { value: 'other', label: 'Other' }
+];
+
+const enclosureOptions = [
+  { value: 'open', label: 'Open' },
+  { value: 'closed', label: 'Closed' }
+];
+
+const refrigerationOptions = [
+  { value: 'available', label: 'Refrigeration Available' },
+  { value: 'not-available', label: 'Not Available' }
 ];
 
 export default function VehicleRegistration() {
@@ -121,6 +123,8 @@ export default function VehicleRegistration() {
     if (!v.rc) newErrors.rc = 'RC upload is required';
     if (!v.roadPermit) newErrors.roadPermit = 'Road permit upload is required';
     if (!v.pollution) newErrors.pollution = 'Pollution certificate upload is required';
+    if (!v.enclosureType) newErrors.enclosureType = 'Please select open or closed';
+    if (!v.refrigerationStatus) newErrors.refrigerationStatus = 'Please select refrigeration status';
     return newErrors;
   };
 
@@ -162,7 +166,6 @@ export default function VehicleRegistration() {
     <div className="pt-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          {/* Form Header */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
             <div className="flex items-center space-x-3 mb-2">
               <Truck className="h-8 w-8 text-white" />
@@ -175,7 +178,6 @@ export default function VehicleRegistration() {
             </p>
           </div>
 
-          {/* Single Vehicle Form */}
           <form className="p-8 space-y-8" onSubmit={handleAddVehicle}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <InputField
@@ -216,6 +218,26 @@ export default function VehicleRegistration() {
                 required
               />
               <InputField
+                label="Open or Closed Vehicle"
+                name="enclosureType"
+                type="select"
+                value={vehicle.enclosureType}
+                onChange={handleInputChange}
+                error={vehicleError.enclosureType}
+                options={enclosureOptions}
+                required
+              />
+              <InputField
+                label="Refrigeration Status"
+                name="refrigerationStatus"
+                type="select"
+                value={vehicle.refrigerationStatus}
+                onChange={handleInputChange}
+                error={vehicleError.refrigerationStatus}
+                options={refrigerationOptions}
+                required
+              />
+              <InputField
                 label="Vehicle Number"
                 name="vehicleNumber"
                 value={vehicle.vehicleNumber}
@@ -223,6 +245,13 @@ export default function VehicleRegistration() {
                 error={vehicleError.vehicleNumber}
                 placeholder="e.g. MH12AB1234"
                 required
+              />
+              <InputField
+                label="Chassis Number"
+                name="chassisNumber"
+                value={vehicle.chassisNumber}
+                onChange={handleInputChange}
+                placeholder="Enter chassis number"
               />
               <InputField
                 label="RC Upload"
@@ -255,6 +284,7 @@ export default function VehicleRegistration() {
                 inputKey={fileInputKey + '-pollution'}
               />
             </div>
+
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
@@ -265,11 +295,12 @@ export default function VehicleRegistration() {
             </div>
           </form>
 
-          {/* List of Added Vehicles */}
           <div className="px-8 pb-8">
             {vehicles.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2"><ClipboardList className="inline-block" /> Added Vehicles</h3>
+                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                  <ClipboardList className="inline-block" /> Added Vehicles
+                </h3>
                 <ul className="divide-y divide-gray-200">
                   {vehicles.map((v, idx) => (
                     <li key={idx} className="py-2 flex items-center justify-between">

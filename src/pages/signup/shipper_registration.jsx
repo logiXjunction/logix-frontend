@@ -226,43 +226,65 @@ export default function ShipperSignup() {
 
   const validateForm = () => {
     const newErrors = {};
-    
-    // Get all required fields from config
-    const requiredFields = [];
-    Object.values(formConfig).forEach(section => {
-      section.fields.forEach(field => {
-        if (field.required) {
-          requiredFields.push({
-            name: field.name,
-            label: field.label,
-            type: field.type
-          });
-        }
-      });
-    });
-
-    // Validate required fields
-    requiredFields.forEach(field => {
-      if (!formData[field.name]) {
-        newErrors[field.name] = `${field.label} is required`;
+  
+    const phoneRegex = /^(\+91[\s-]?)?[6-9]\d{9}$/;
+    const pincodeRegex = /^[1-9][0-9]{5}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const ownerNameRegex = /^[a-zA-Z\s\-]+$/;
+  
+    const requiredFields = [
+      { key: 'companyName', label: 'Company name' },
+      { key: 'companyGst', label: 'GST number' },
+      { key: 'companyEmail', label: 'Email' },
+      { key: 'customerServiceNumber', label: 'Customer service number' },
+      { key: 'ownerName', label: 'Owner name' },
+      { key: 'ownerContact', label: 'Owner contact' },
+      { key: 'companyAddress', label: 'Company address' },
+      { key: 'pincode', label: 'Pincode' },
+      { key: 'city', label: 'City' },
+      { key: 'state', label: 'State' },
+    ];
+  
+    // Check for required fields
+    requiredFields.forEach(({ key, label }) => {
+      const value = formData[key];
+      if (typeof value !== 'string' || value.trim() === '') {
+        newErrors[key] = `${label} is required`;
       }
     });
-    
-    // Email validation
-    if (formData.companyEmail && !/\S+@\S+\.\S+/.test(formData.companyEmail)) {
+  
+    // Format validations (only if the field is a string)
+    if (typeof formData.companyEmail === 'string' && !emailRegex.test(formData.companyEmail.trim())) {
       newErrors.companyEmail = 'Please enter a valid email address';
     }
-    
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm password is required';
-    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
-    if (!formData.companyGst) newErrors.companyGst = 'GST number is required';
-    else if (formData.companyGst.replace(/\s+/g, '').length !== 15) newErrors.companyGst = 'GST number must be 15 characters';
-    if (!gstVerified) newErrors.companyGst = 'GST number must be verified';
-    
+  
+    if (typeof formData.pocContact === 'string' && !phoneRegex.test(formData.pocContact.trim())) {
+      newErrors.pocContact = 'Enter a valid phone number';
+    }
+    if (typeof formData.customerServiceNumber === 'string' && !phoneRegex.test(formData.customerServiceNumber.trim())) {
+      newErrors.customerServiceNumber = 'Enter a valid phone number';
+    }
+  
+    if (typeof formData.ownerContact === 'string' && !phoneRegex.test(formData.ownerContact.trim())) {
+      newErrors.ownerContact = 'Enter a valid phone number';
+    }
+  
+    if (typeof formData.pincode === 'string' && !pincodeRegex.test(formData.pincode.trim())) {
+      newErrors.pincode = 'Enter a valid 6-digit pincode';
+    }
+    if (typeof formData.pocName === 'string' && !ownerNameRegex.test(formData.pocName.trim())) {
+      newErrors.pocName = 'POC name can only contain letters, spaces, and hyphens';
+    }
+
+    if (typeof formData.ownerName === 'string' && !ownerNameRegex.test(formData.ownerName.trim())) {
+      newErrors.ownerName = 'Owner name can only contain letters, spaces, and hyphens';
+    }
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
+  
 
   const handleSubmit = async () => {
     if (!validateForm()) return;

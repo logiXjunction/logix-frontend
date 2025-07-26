@@ -4,7 +4,7 @@ import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import OtpInput from '../components/otp_input';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 
 export default function SignupFormPage() {
   const [role, setRole] = useState('shipper');

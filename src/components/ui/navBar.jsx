@@ -71,7 +71,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Dropdown */}
-      <div className={`bg-white/70 backdrop-blur-md border border-white/20 rounded-xl absolute top-full left-0 w-full px-6 py-6 md:hidden shadow-lg transition-all duration-300 ease-in-out ${isOpen ? 'block' : 'hidden'}`}>
+      <div className={`mt-2 bg-white/70 backdrop-blur-md border border-white/20 rounded-xl absolute top-full left-0 w-full px-6 py-6 md:hidden shadow-lg transition-all duration-300 ease-in-out ${isOpen ? 'block' : 'hidden'}`}>
         {/* Centered Nav Links */}
         <div className="flex flex-col items-center justify-center space-y-2 text-neutral-900 font-medium">
           <a href="/" className="hover:text-[#8bb5f4] transition">Home</a>

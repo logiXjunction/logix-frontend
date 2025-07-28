@@ -9,7 +9,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="h-screen snap-y snap-mandatory overflow-y-scroll">
+    <div className="h-screen md:snap-y md:snap-mandatory overflow-y-scroll">
       <section className="relative h-screen snap-start">
         {/* Background Image */}
         <img
@@ -38,7 +38,7 @@ export default function LandingPage() {
                   onClick={() => navigate("/signup-otp")}
                   className="px-6 py-3 transition-all duration-300 transform bg-lxj-accent text-white rounded-full font-semibold hover:bg-lxj-primary"
                 >
-                  Get started for Free
+                  Get started
                 </button>
                 <a
                   href="/about-us"

@@ -2,22 +2,22 @@ import { FaTruckMoving, FaMapMarkedAlt, FaRoute, FaGavel } from "react-icons/fa"
 
 const features = [
   {
-    icon: <FaTruckMoving className="text-4xl text-lxj-accent" />,
+    icon: <FaTruckMoving className="text-3xl text-lxj-accent" />,
     title: "Digital Freight Marketplace",
     desc: "Post, match & move loads with intelligent logistics algorithms.",
   },
   {
-    icon: <FaMapMarkedAlt className="text-4xl text-lxj-accent" />,
+    icon: <FaMapMarkedAlt className="text-3xl text-lxj-accent" />,
     title: "Fleet Telematics & Tracking",
-    desc: "Monitor real-time location, performance, and efficiency of your vehicles.",
+    desc: "Monitor real-time location, and efficiency of your vehicles.",
   },
   {
-    icon: <FaRoute className="text-4xl text-lxj-accent" />,
+    icon: <FaRoute className="text-3xl text-lxj-accent" />,
     title: "Route Optimization",
     desc: "Minimize fuel costs and delivery times with AI-powered route planning.",
   },
   {
-    icon: <FaGavel className="text-4xl text-lxj-accent" />,
+    icon: <FaGavel className="text-3xl text-lxj-accent" />,
     title: "Transparent Bidding System",
     desc: "Fair, fast, and visible bidding between shippers and transporters.",
   },
@@ -32,18 +32,23 @@ export default function KeyFeatures() {
           Explore our core offerings that make freight smarter, faster, and fairer.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 justify-center">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:shadow-zinc-400 border border-zinc-200 transition-all duration-300 transform hover:-translate-y-1"
+              className="w-44 h-44 sm:w-52 sm:h-52 bg-white p-4 rounded-2xl shadow-md hover:shadow-lg hover:shadow-zinc-400 border border-zinc-200 transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
             >
-              <div className="flex flex-col items-start space-y-4">
+              {/* Icon + Title at the top */}
+              <div className="flex items-center space-x-2 mb-1">
                 {feature.icon}
-                <h3 className="text-xl font-semibold text-lxj-alert">
+                <h3 className="text-md font-semibold text-lxj-alert text-left leading-tight">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">{feature.desc}</p>
+              </div>
+
+              {/* Spacer + Centered Description */}
+              <div className="flex-grow flex items-center">
+                <p className="text-sm text-gray-600 text-left leading-snug">{feature.desc}</p>
               </div>
             </div>
           ))}

@@ -41,8 +41,8 @@ export default function AboutUs() {
       <div className="bg-white px-4 sm:px-6 pt-8 pb-20 space-y-16">
 
         {/* Who We Are + Globe */}
-        <div className="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-          <article className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-zinc-200">
+        <div className="max-w-7xl mx-auto  flex flex-col md:grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+<article className="bg-white p-6 sm:p-8 rounded-2xl border-0 shadow-none md:border md:shadow-xl md:border-zinc-200">
             <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-900 mb-4 sm:mb-6">
               Who <span className="text-gray-900">We Are</span>
             </h2>
@@ -66,14 +66,13 @@ export default function AboutUs() {
               </div>
             </div>
           </article>
-          <div className="relative mx-auto w-full max-w-[350px] sm:max-w-[400px] md:max-w-[450px] lg:max-w-[500px]">
-  <GlobeIndia />
-</div>
-
+          <div className="relative mx-auto w-full max-w-[250px] sm:max-w-[400px] md:max-w-[700px] lg:max-w-[500px]">
+            <GlobeIndia />
+          </div>
         </div>
 
         {/* Vision & Values */}
-        <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-zinc-200">
+<div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl border-0 shadow-none md:border md:shadow-xl md:border-zinc-200">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-lxj-primary mb-4">
             Our Vision
           </h2>
@@ -105,7 +104,7 @@ export default function AboutUs() {
                 desc: "Consistent, dependable service you can trust for your logistics needs.",
               },
             ].map(({ icon: Icon, title, desc }, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 text-center shadow-md border border-zinc-200">
+              <div key={i} className="bg-white rounded-xl p-6 text-center shadow-md border border-zinc-200 md:border-0">
                 <Icon className="w-12 h-12 mx-auto text-lxj-primary mb-4" />
                 <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{title}</h4>
                 <p className="text-sm sm:text-base text-gray-700">{desc}</p>
@@ -115,7 +114,8 @@ export default function AboutUs() {
         </div>
 
         {/* Problem Section */}
-        <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-zinc-200">
+       <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl border-0 shadow-none md:border md:shadow-xl md:border-zinc-200">
+
           <h2 className="text-3xl sm:text-4xl font-extrabold text-lxj-primary mb-4">The Problem</h2>
           <ul className="text-base sm:text-lg text-gray-800 space-y-4">
             {[{
@@ -137,7 +137,8 @@ export default function AboutUs() {
         </div>
 
         {/* Solution Section */}
-        <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-zinc-200">
+          <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl border-0 shadow-none md:border md:shadow-xl md:border-zinc-200">
+
           <h2 className="text-3xl sm:text-4xl font-extrabold text-lxj-primary mb-4">Our Solution</h2>
           <ul className="text-base sm:text-lg text-gray-800 space-y-4">
             {[{
@@ -162,7 +163,8 @@ export default function AboutUs() {
         </div>
 
         {/* Our Service Section */}
-        <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-zinc-200">
+          <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl border-0 shadow-none md:border md:shadow-xl md:border-zinc-200">
+
           <h2 className="text-3xl sm:text-4xl font-extrabold text-lxj-primary mb-4">Our Service</h2>
           <ul className="text-base sm:text-lg text-gray-800 space-y-4">
             {[{
@@ -187,7 +189,8 @@ export default function AboutUs() {
         </div>
 
         {/* Why Choose Us */}
-        <div className="max-w-6xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-zinc-200">
+          <div className="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-2xl border-0 shadow-none md:border md:shadow-xl md:border-zinc-200">
+
           <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-lxj-primary mb-6">
             Why Choose LogiXJunction?
           </h2>
@@ -199,7 +202,7 @@ export default function AboutUs() {
               { icon: ShieldCheck, title: "Robust Security", desc: "Secured data and freight." },
               { icon: Radar, title: "Smart Tracking", desc: "Live updates and smart rates." },
             ].map(({ icon: Icon, title, desc }, i) => (
-              <div key={i} className="flex gap-4 items-start bg-white rounded-2xl p-4 shadow-md border border-zinc-200">
+              <div key={i} className="flex gap-4 items-start bg-white rounded-2xl p-4 shadow-md border border-zinc-200 md:border-0">
                 <Icon className="text-purple-600 w-6 h-6 mt-1" />
                 <div>
                   <h3 className="font-semibold text-base sm:text-lg">{title}</h3>

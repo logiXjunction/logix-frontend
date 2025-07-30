@@ -25,10 +25,11 @@ export default function AboutUs() {
       {/* Banner */}
       <div className="relative h-[30vh] sm:h-[40vh]">
         <img
-          src="images/truck-aboutus.jpeg"
-          alt="About background"
-          className="absolute inset-0 w-full h-full object-cover object-center z-0"
-        />
+  src="images/truck-aboutus.jpeg"
+  alt="About background"
+  className="absolute inset-0 w-full h-full object-cover object-[50%_65%] z-0"
+/>
+
         <div className="absolute inset-0 bg-black/10 z-10" />
         <div className="relative z-20 h-full flex items-start justify-start p-6 sm:p-8">
           <h1 className="text-white mt-10 text-3xl sm:text-4xl md:text-6xl font-bold drop-shadow-lg">

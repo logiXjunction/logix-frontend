@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Truck, MapPin, Phone, Building, Users, Clock, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../images/logo.jpeg'; // Adjust the path as necessary
+import axios from 'axios';
 
 export default function CarrierSignup() {
   const [formData, setFormData] = useState({
@@ -32,20 +33,40 @@ export default function CarrierSignup() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
-    if (name === 'gstNumber') {
-      // Remove all spaces
-      let raw = value.replace(/\s+/g, '');
-      // Limit to 15 characters
-      if (raw.length > 15) raw = raw.slice(0, 15);
-      // Insert a space after every 4 characters
-      newValue = raw.replace(/(.{4})/g, '$1 ').trim();
+  
+    switch (name) {
+      case 'gstNumber': {
+        let raw = value.replace(/\s+/g, '');
+        if (raw.length > 15) raw = raw.slice(0, 15);
+        newValue = raw.replace(/(.{4})/g, '$1 ').trim();
+        break;
+      }
+  
+      case 'customerServiceNumber':
+      case 'ownerContact': {
+        newValue = value.replace(/\D/g, '');
+        if (newValue.length > 10) newValue = newValue.slice(0, 10);
+        break;
+      }
+  
+      case 'ownerName': {
+        // Allow only letters, hyphens, and single spaces between words
+        newValue = value
+          .replace(/[^a-zA-Z\- ]/g, '') // Remove invalid chars
+          .replace(/\s{2,}/g, ' ')      // Replace multiple spaces with one
+          .trimStart();                 // Prevent leading whitespace
+        break;
+      }
+  
+      default:
+        break;
     }
+  
     setFormData(prev => ({
       ...prev,
       [name]: newValue
     }));
-
-    // Clear error when user starts typing
+  
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -53,6 +74,7 @@ export default function CarrierSignup() {
       }));
     }
   };
+  
 
   const handleGstVerify = async () => {
     setGstVerifying(true);
@@ -66,58 +88,91 @@ export default function CarrierSignup() {
 
   const validateForm = () => {
     const newErrors = {};
+    const phoneRegex = /^(\+91\s?)?[6-9]\d{9}$/;
+    const pincodeRegex = /^[1-9][0-9]{5}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const ownerNameRegex = /^[a-zA-Z\s\-]+$/;
+
 
     // Only these fields are compulsory
     if (!formData.customerServiceNumber) newErrors.customerServiceNumber = 'Phone number is required';
-    if (!formData.companyEmail) newErrors.companyEmail = 'Company email is required';
+    if (formData.customerServiceNumber && !phoneRegex.test(formData.customerServiceNumber.trim())) {
+      newErrors.customerServiceNumber = 'Enter a valid phone number';
+    }if (formData.companyEmail && !/\S+@\S+\.\S+/.test(formData.companyEmail)) {
+      newErrors.companyEmail = 'Please enter a valid email address';
+    }    
     if (!formData.password) newErrors.password = 'Password is required';
     if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm password is required';
     if (!formData.gstNumber) newErrors.gstNumber = 'GST number is required';
     else if (formData.gstNumber.replace(/\s+/g, '').length !== 15) newErrors.gstNumber = 'GST number must be 15 characters';
     if (!formData.companyName) newErrors.companyName = 'Company name is required';
-
+    if (!formData.ownerName) newErrors.ownerName = 'Owner name is required';
+    if (formData.ownerName && !ownerNameRegex.test(formData.ownerName.trim())) {
+      newErrors.ownerName = 'Owner name can only contain letters, spaces, and hyphens';
+    }
+    
     if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-
-    if (formData.companyEmail && !/\S+@\S+\.\S+/.test(formData.companyEmail)) {
+    if (!formData.companyEmail) newErrors.companyEmail = 'Company email is required';
+    
+    if (formData.companyEmail && !emailRegex.test(formData.companyEmail.trim())) {
       newErrors.companyEmail = 'Please enter a valid email address';
+    }
+    if (formData.ownerContact && !phoneRegex.test(formData.ownerContact.trim())) {
+      newErrors.ownerContact = 'Enter a valid owner contact number';
+    }
+    if (formData.pincode && !pincodeRegex.test(formData.pincode.trim())) {
+      newErrors.pincode = 'Enter a valid 6-digit pincode';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
+  
     setIsSubmitting(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      alert('Carrier registration submitted successfully! We will review your application and get back to you within 24-48 hours.');
-      setIsSubmitting(false);
+  
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      mobileNumber: formData.mobileNumber,
+      password: formData.password,
+      designation: formData.designation || "Owner",
+      companyName: formData.companyName,
+      gstNumber: formData.gstNumber,
+    };
+  
+    try {
+      const response = await axios.post('http://backend.logixjunction.com/api/transporters/signup', payload); // Use full backend URL
+  
+      alert('Registration successful!');
+      
       // Reset form
       setFormData({
-        companyName: '',
-        companyAddress: '',
-        companyEmail: '',
-        customerServiceNumber: '',
-        gstNumber: '',
-        cinNumber: '',
-        ownerName: '',
-        ownerContact: '',
-        fleetSize: '',
-        serviceType: '',
-        pincode: '',
-        districtRate: '',
-        serviceMode: '',
-        etdCities: '',
+        name: '',
+        email: '',
+        mobileNumber: '',
         password: '',
+        designation: '',
+        companyName: '',
+        gstNumber: '',
         confirmPassword: ''
       });
-      navigate('/vehicle-registration'); // <-- Change navigation here
-    }, 2000);
+  
+      // Optionally navigate
+      // navigate('/vehicle-registration');
+    } catch (error) {
+      console.error('Error during registration:', error);
+      alert('Registration failed. Please check the console for details.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
 
   return (
     <div className="pt-15 min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">

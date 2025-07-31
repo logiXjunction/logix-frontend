@@ -296,10 +296,22 @@ const shipperNav = [
   { name: 'Billing', icon: <CreditCardIcon /> },
 ];
 
+const transporterUser = {
+  name: 'Ankit',
+  role: 'Transporter',
+  img: 'https://randomuser.me/api/portraits/men/32.jpg',
+};
+
+const shipperUser = {
+  name: 'Gautam',
+  role: 'Shipper',
+  img: 'https://randomuser.me/api/portraits/women/44.jpg',
+};
+
 const Sidebar = ({ userType, activePage, setActivePage, sidebarOpen, setSidebarOpen }) => {
   const isTransporter = userType === 'transporter';
   const navItems = isTransporter ? transporterNav : shipperNav;
-  const user = isTransporter ? { name: 'Rajesh Kumar', role: 'Transporter' } : { name: 'Priya Sharma', role: 'Shipper' };
+  const user = isTransporter ? transporterUser : shipperUser;
 
   const handleNavClick = (page) => {
     setActivePage(page);
@@ -318,7 +330,13 @@ const Sidebar = ({ userType, activePage, setActivePage, sidebarOpen, setSidebarO
       <div className={`fixed top-0 left-0 h-screen w-64 bg-slate-900 text-gray-300 flex-shrink-0 flex flex-col z-40
                        transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 
                        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-6 border-b border-slate-800">
+        <div className="p-6 border-b border-slate-800 flex flex-col items-center">
+          {/* Circular user picture */}
+          <img
+            src={user.img}
+            alt={user.name}
+            className="w-24 h-24 rounded-full mb-4 border-2 border-indigo-500 object-cover"
+          />
           <h2 className="text-lg font-semibold text-white">{user.name}</h2>
           <span className="text-sm text-gray-400">{user.role}</span>
         </div>

@@ -125,7 +125,7 @@ export default function DriverRegistration() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Form Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
+          <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
             <div className="flex items-center space-x-3 mb-2">
               <User className="h-8 w-8 text-white" />
               <h2 className="text-2xl font-bold text-white">
@@ -135,6 +135,14 @@ export default function DriverRegistration() {
             <p className="text-blue-100">
               Register your drivers to enable logistics operations
             </p>
+            {/* Skip Button - Top Right */}
+            <button
+              type="button"
+              onClick={() => navigate('/transporter-dashboard')}
+              className="absolute top-4 right-4 px-5 py-2 bg-transparent border border-blue-100 text-blue-100 text-sm font-semibold rounded-full hover:bg-white hover:text-blue-700 hover:border-blue-400 shadow-sm transition duration-150 ease-in-out z-10"
+            >
+              Skip
+            </button>
           </div>
 
           {/* Single Driver Form */}
@@ -249,13 +257,6 @@ export default function DriverRegistration() {
                     <span>Submit Registration</span>
                   </div>
                 )}
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate('/transporter-dashboard')}
-                className="cursor-pointer bg-gray-100 text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 w-full border border-blue-200"
-              >
-                Skip
               </button>
             </div>
           </div>

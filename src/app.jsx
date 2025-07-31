@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import TransporterDashboard from './pages/transporter_dashboard';
+//import TransporterDashboard from './pages/transporter_dashboard';
 // import Home from './pages/home'; // You can create this as a landing page
 import CarrierRegistration from './pages/signup/transporter_registration'; 
 import ShipperRegistration from './pages/signup/shipper_registration'; 
@@ -33,7 +33,7 @@ function App() {
       <Routes>
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/transporter-dashboard" element={<TransporterDashboard />} />
+        
         <Route path="/carrier-registration" element={<CarrierRegistration />} />
         <Route path="/shipper-registration" element={<ShipperRegistration />} />
         <Route path="/shipments" element={<Shipments />} />
@@ -52,7 +52,7 @@ function App() {
         <Route path="/driver-registration" element={<DriverRegistration />} />
         <Route path="/carrier-registration" element={<CarrierRegistration />} />
         <Route path="/shipper-registration" element={<ShipperRegistration />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/transporter-dashboard" element={<Dashboard />} />
       </Routes>
       <Footer/>
     </Router>

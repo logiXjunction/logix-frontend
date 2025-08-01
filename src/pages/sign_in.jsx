@@ -140,7 +140,7 @@ export default function SignInPage() {
               className="peer w-full px-4 pt-6 pb-2 border border-[#ccc] rounded-md focus:outline-none focus:ring-2 focus:ring-[#3e92cc] transition-all duration-200 placeholder-transparent"
               placeholder="Email or mobile number"
             />
-            <label className="absolute left-4 top-2 text-sm text-[#1e1b18] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#888] peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#3e92cc]">
+            <label className="pointer-events-none absolute left-4 top-2 text-sm text-[#1e1b18] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#888] peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#3e92cc]">
               Email or mobile number
             </label>
             {contactError && (
@@ -157,7 +157,7 @@ export default function SignInPage() {
               className="peer w-full px-4 pt-6 pb-2 border border-[#ccc] rounded-md focus:outline-none focus:ring-2 focus:ring-[#3e92cc] transition-all duration-200 placeholder-transparent"
               placeholder="Password"
             />
-            <label className="absolute left-4 top-2 text-sm text-[#1e1b18] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#888] peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#3e92cc]">
+            <label className="pointer-events-none absolute left-4 top-2 text-sm text-[#1e1b18] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#888] peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#3e92cc]">
               Password
             </label>
           </div>

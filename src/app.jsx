@@ -23,11 +23,13 @@ import SignupFormPage from './pages/signup_otp';
 
 import VehicleRegistration from './pages/vehicle_registration';
 import DriverRegistration from './pages/driver_registration';
+import Dashboard from './pages/Dashboardtest';
 
 function App() {
   return (
     <Router>
       <Navbar />
+      {/* Main Routes */}
       <Routes>
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/landing" element={<LandingPage />} />
@@ -50,6 +52,9 @@ function App() {
         <Route path="/consignment" element={<Consignment />} />
         <Route path="/vehicle-registration" element={<VehicleRegistration />} />
         <Route path="/driver-registration" element={<DriverRegistration />} />
+        <Route path="/carrier-registration" element={<CarrierRegistration />} />
+        <Route path="/shipper-registration" element={<ShipperRegistration />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         
         
         <Route path="/client-dashboard" element={<ClientDashboard />} />

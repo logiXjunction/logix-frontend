@@ -25,7 +25,7 @@ export default function SignInPage() {
       return false;
     }
   
-    const phoneRegex = /^(\+91[\-\s]?)?[6-9]\d{9}$/;
+    const phoneRegex = /^(\+91[\s-]?)?[6-9]\d{9}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
     if (contact.includes('@')) {

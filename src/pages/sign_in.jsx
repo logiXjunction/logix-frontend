@@ -85,7 +85,7 @@ export default function SignInPage() {
     <div className="min-h-screen bg-[#fffaff] flex flex-col md:flex-row items-center justify-center px-6 py-12 mt-12">
       {/* Left Side - Company Motto */}
       <div className="w-full md:w-1/2 flex flex-col justify-center mb-12 md:mb-0 md:pr-10">
-        <img src="/LOGO_LxJ2.png" className="h-20 w-24" />
+        <img src="/LOGO_LxJ2.png" className="h-20 w-24 mx-50" />
         <h1 className="text-4xl sm:text-5xl font-bold text-[#1e1b18] leading-tight mb-6">
           YOUR JUNCTION <span className="text-[#030712]">TO</span>
           <br />

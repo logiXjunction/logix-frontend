@@ -58,13 +58,13 @@ export default function Navbar() {
 
       {/* Fullscreen Mobile Overlay */}
       {isOpen && (
-  <div className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center px-8 pt-[80px] pb-10 md:hidden transition-all duration-300 ease-in-out">
+  <div className="fixed inset-0 bg-white/50 backdrop-blur-md z-40 flex flex-col items-center justify-center px-8 pt-[80px] pb-10 md:hidden transition-all duration-300 ease-in-out">
     <div className="flex flex-col items-center space-y-4 text-neutral-900 font-semibold">
       <button onClick={() => { setIsOpen(false); navigate('/'); }} className="text-xl hover:text-[#8bb5f4] transition">Home</button>
       <button onClick={() => { setIsOpen(false); navigate('/about-us'); }} className="text-xl hover:text-[#8ec5ff] transition">Our Story</button>
       <button onClick={() => { setIsOpen(false); navigate('/join-us'); }} className="text-xl hover:text-[#9193ad] transition">Join Us</button>
-      <button onClick={() => { setIsOpen(false); navigate('/sign-in'); }} className="text-lg hover:text-[#3e92cc] transition">Sign In</button>
-      <button onClick={() => { setIsOpen(false); navigate('/signup-otp'); }} className="bg-[#d8315b] hover:bg-[#b92549] text-white px-5 py-2 rounded-full text-sm font-semibold shadow">
+      <button onClick={() => { setIsOpen(false); navigate('/sign-in'); }} className="text-xl hover:text-[#3e92cc] transition">Sign In</button>
+      <button onClick={() => { setIsOpen(false); navigate('/signup-otp'); }} className="bg-[#d8315b] hover:bg-[#b92549] text-white px-5 py-2 rounded-full text-xl font-semibold shadow">
         Get Started
       </button>
     </div>

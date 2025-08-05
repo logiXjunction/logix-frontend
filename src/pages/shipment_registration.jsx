@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Upload, Package, MapPin, Calendar, Truck, Scale, Ruler } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import axios from 'axios';
 
 const ShipmentRegistration = () => {
   const [formData, setFormData] = useState({
     pickupLocation: '',
+    pickupAddressLine1: '',
+    pickupAddressLine2: '',
+    pickupPincode: '',
     dropLocation: '',
+    dropAddressLine1: '',
+    dropAddressLine2: '',
+    dropPincode: '',
     materialType: '',
     weight: '',
     length: '',
@@ -66,32 +72,41 @@ const ShipmentRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    try{
+
+    try {
+      const pickupFullAddress = `${formData.pickupAddressLine1}, ${formData.pickupAddressLine2}, ${formData.pickupLocation}, ${formData.pickupPincode}`;
+      const dropFullAddress = `${formData.dropAddressLine1}, ${formData.dropAddressLine2}, ${formData.dropLocation}, ${formData.dropPincode}`;
+
+      const {
+        pickupAddressLine1, pickupAddressLine2, pickupPincode,
+        dropAddressLine1, dropAddressLine2, dropPincode,
+        ...rest
+      } = formData;
+
       const formPayLoad = {
-        ...formData,
-        materialType : formData.materialType === 'Others'? formData.customMaterialType : formData.materialType,
-      }
+        ...rest,
+        pickupLocation: pickupFullAddress,
+        dropLocation: dropFullAddress,
+        materialType: formData.materialType === 'Others' ? formData.customMaterialType : formData.materialType,
+      };
 
-      const response = await axios.post('http://localhost:5000/api/get-transporters',formPayLoad);
-
+      const response = await axios.post('http://localhost:5000/api/get-transporters', formPayLoad);
       const suitableTransporters = response.data;
 
-      if(suitableTransporters && suitableTransporters.transporters?.length>0){
-        navigate('/available-transporters',{state:{transporters: suitableTransporters}});
-      }else{
+      if (suitableTransporters && suitableTransporters.transporters?.length > 0) {
+        navigate('/available-transporters', { state: { transporters: suitableTransporters } });
+      } else {
         alert("No suitable transporters found for the given shipment details. Please check your inputs and try again.");
-      }      
-    } catch (error){
-      console.log("error while fetching transporters: ",error);
-      alert ("something went wrong while submitting the shipment data!")
+      }
+    } catch (error) {
+      console.log("error while fetching transporters: ", error);
+      alert("Something went wrong while submitting the shipment data!");
     }
   };
 
   return (
     <div className="pt-20 min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-center mb-4">
             <h1 className="text-3xl font-bold text-gray-800">
@@ -101,57 +116,113 @@ const ShipmentRegistration = () => {
           <p className="text-center text-gray-600">Register your shipment with detailed information</p>
         </div>
 
-        {/* Form */}
-        <form action="submit" onSubmit={handleSubmit} className="space-y-8">
-            <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
-          {/* Company Header Inside Form */}
-          <div className="border-b pb-6 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">LogiTech Solutions</h2>
-                <p className="text-gray-600">Your Trusted Logistics Partner</p>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+            <div className="border-b pb-6 mb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">LogiTech Solutions</h2>
+                  <p className="text-gray-600">Your Trusted Logistics Partner</p>
+                </div>
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full flex items-center justify-center">
+                  <Package className="w-8 h-8 text-white" />
+                </div>
               </div>
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full flex items-center justify-center">
-                <Package className="w-8 h-8 text-white" />
-              </div>
-            </div>
-          </div>
-          {/* Location Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="flex items-center text-sm font-medium text-gray-700">
-                <MapPin className="w-4 h-4 mr-2 text-blue-600" />
-                Pick Up Location *
-              </label>
-              <input
-                type="text"
-                name="pickupLocation"
-                value={formData.pickupLocation}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Enter pickup address"
-                required
-              />
             </div>
 
-            <div className="space-y-2">
-              <label className="flex items-center text-sm font-medium text-gray-700">
-                <MapPin className="w-4 h-4 mr-2 text-red-500" />
-                Drop Location *
-              </label>
-              <input
-                type="text"
-                name="dropLocation"
-                value={formData.dropLocation}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Enter delivery address"
-                required
-              />
-            </div>
-          </div>
+            {/* Pickup and Drop Location Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Pickup Address */}
+              <div className="space-y-4">
+                <label className="flex items-center text-sm font-medium text-gray-700">
+                  <MapPin className="w-4 h-4 mr-2 text-blue-600" />
+                  Pick Up Location *
+                </label>
+                <input
+                  type="text"
+                  name="pickupLocation"
+                  value={formData.pickupLocation}
+                  onChange={handleInputChange}
+                  placeholder="General area or landmark"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="pickupAddressLine1"
+                  value={formData.pickupAddressLine1}
+                  onChange={handleInputChange}
+                  placeholder="Building no, street"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="pickupAddressLine2"
+                  value={formData.pickupAddressLine2}
+                  onChange={handleInputChange}
+                  placeholder="City"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="pickupPincode"
+                  value={formData.pickupPincode}
+                  onChange={handleInputChange}
+                  placeholder="Pincode"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
 
-          {/* Material Type and Weight */}
+              {/* Drop Address */}
+              <div className="space-y-4">
+                <label className="flex items-center text-sm font-medium text-gray-700">
+                  <MapPin className="w-4 h-4 mr-2 text-red-500" />
+                  Drop Location *
+                </label>
+                <input
+                  type="text"
+                  name="dropLocation"
+                  value={formData.dropLocation}
+                  onChange={handleInputChange}
+                  placeholder="General area or landmark"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="dropAddressLine1"
+                  value={formData.dropAddressLine1}
+                  onChange={handleInputChange}
+                  placeholder="Building no, street"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="dropAddressLine2"
+                  value={formData.dropAddressLine2}
+                  onChange={handleInputChange}
+                  placeholder="City"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+                <input
+                  type="text"
+                  name="dropPincode"
+                  value={formData.dropPincode}
+                  onChange={handleInputChange}
+                  placeholder="Pincode"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
+            </div>
+
+            
+{/* Material Type and Weight */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="flex items-center text-sm font-medium text-gray-700">
@@ -368,7 +439,7 @@ const ShipmentRegistration = () => {
               Submit
             </button>
           </div>
-        </div>
+          </div>
         </form>
       </div>
     </div>
@@ -376,3 +447,4 @@ const ShipmentRegistration = () => {
 };
 
 export default ShipmentRegistration;
+

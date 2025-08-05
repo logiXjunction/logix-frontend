@@ -24,6 +24,12 @@ const Home = () => {
             <User size={20} />
             Client Dashboard
           </Link>
+          <Link to="/shipment-registration">
+            <button className="flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-white transition-all duration-200 hover:shadow-lg hover:scale-105" style={{ backgroundColor: '#d8315B' }}>
+              <Send className="w-5 h-5" />
+              Request Shipment
+            </button>
+          </Link>
         </div>
       </div>
     </div>

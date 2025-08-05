@@ -64,29 +64,103 @@ const ShipmentRegistration = () => {
 
   const navigate = useNavigate();
 
+  const API_BASE = 'http://localhost:3000';
+  //PUT THE CORRECT URL ABOVE!
+
+
+  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try{
-      const formPayLoad = {
-        ...formData,
-        materialType : formData.materialType === 'Others'? formData.customMaterialType : formData.materialType,
-      }
+  e.preventDefault();
 
-      const response = await axios.post('http://localhost:5000/api/get-transporters',formPayLoad);
-
-      const suitableTransporters = response.data;
-
-      if(suitableTransporters && suitableTransporters.transporters?.length>0){
-        navigate('/available-transporters',{state:{transporters: suitableTransporters}});
-      }else{
-        alert("No suitable transporters found for the given shipment details. Please check your inputs and try again.");
-      }      
-    } catch (error){
-      console.log("error while fetching transporters: ",error);
-      alert ("something went wrong while submitting the shipment data!")
+  try {
+    // Basic client-side validation for required fields (optional, since inputs use required)
+    if (!formData.pickupLocation || !formData.dropLocation) {
+      alert('Please fill pickup and drop locations.');
+      return;
     }
-  };
+
+    // Compose request body according to OpenAPI schema
+    const body = {
+      pickupLocation: formData.pickupLocation,
+      dropLocation: formData.dropLocation,
+      materialType:
+        formData.materialType === 'Others'
+          ? formData.customMaterialType || 'Others'
+          : formData.materialType,
+      // coolingType is required by the API spec. Defaulting to 'none' until the form is updated.
+      coolingType: 'none',
+      weightKg: Number(formData.weight || 0),
+      lengthFt: Number(formData.length || 0),
+      widthFt: Number(formData.width || 0),
+      heightFt: Number(formData.height || 0),
+      // Convert date (yyyy-mm-dd) to ISO. If you want a specific time, modify this.
+      estimatedDeliveryDate: formData.estimatedDelivery
+        ? new Date(formData.estimatedDelivery)
+        : null,
+      valueInr: Number(formData.materialValue || 0),
+      shipmentType: formData.shipmentType
+    };
+
+    // remove null/undefined fields if any
+    Object.keys(body).forEach((k) => {
+      if (body[k] === null || body[k] === '') delete body[k];
+    });
+
+    // get token (update this if your app stores tokens elsewhere)
+    const token = localStorage.getItem('token');
+
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    };
+
+    // call backend create shipment endpoint
+    const res = await axios.post(`${API_BASE}/api/shipment/create`, body, { headers });
+
+    // axios resolves for 2xx only; check status
+    if (res.status === 201 || res.status === 200) {
+      const responseData = res.data;
+      // Success: API returns { success: true, data: {...} }
+      alert(responseData?.message || 'Shipment created successfully.');
+
+      // Navigate and pass the created shipment to next page if desired.
+      // I kept your previous navigation target (/available-transporters) so you can show transporters for this shipment.
+      // Adjust as needed (maybe navigate to '/shipments' or '/shipment/:id').
+      navigate('/available-transporters', { state: { shipment: responseData?.data } });
+      return;
+    }
+
+    // fallback - unexpected 2xx
+    alert('Shipment request returned unexpected status: ' + res.status);
+  } catch (err) {
+    // Axios error handling
+    if (err.response) {
+      // Server responded with a status outside 2xx
+      const status = err.response.status;
+      const data = err.response.data;
+      if (status === 400) {
+        alert(data?.message || 'Validation error: missing or invalid fields.');
+        // if backend returns detailed errors, you could set them in state here:
+        // setErrors(data.errors)
+      } else if (status === 401) {
+        alert(data?.message || 'Unauthorized. Please login again.');
+        // Optional: logout and redirect to login
+        // logout(); navigate('/login');
+      } else {
+        alert(data?.message || `Server error (status ${status}). Try again later.`);
+      }
+    } else if (err.request) {
+      // Request made but no response (network / CORS)
+      console.error('No response from server:', err.request);
+      alert('No response from server. Check backend is running and CORS is configured.');
+    } else {
+      // Something else
+      console.error('Error while submitting:', err.message);
+      alert('Error while submitting: ' + err.message);
+    }
+  }
+};
+
 
   return (
     <div className="pt-20 min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">

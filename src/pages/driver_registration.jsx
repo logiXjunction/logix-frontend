@@ -102,23 +102,49 @@ export default function DriverRegistration() {
     setDrivers(prev => prev.filter((_, i) => i !== idx));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (drivers.length === 0) {
-      setListError('Please add at least one driver before submitting.');
-      return;
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (drivers.length === 0) {
+    setListError('Please add at least one driver before submitting.');
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    for (const d of drivers) {
+      const formData = new FormData();
+      formData.append('driverName', d.driverName);
+      formData.append('phoneNumber', d.phoneNumber);
+      formData.append('vehicleNumber', d.vehicleNumber);
+      formData.append('aadhaar', d.aadhaar);
+      formData.append('license', d.license);
+      formData.append('photo', d.photo);
+
+      const response = await fetch('https://logix-backend.onrender.com/api/driver/register', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to register driver ${d.driverName}`);
+      }
     }
-    setIsSubmitting(true);
-    setTimeout(() => {
-      alert('Driver(s) registered successfully!');
-      setIsSubmitting(false);
-      setDrivers([]);
-      setDriver({ ...initialDriver });
-      setDriverError({});
-      setListError('');
-      setFileInputKey(Date.now());
-    }, 2000);
-  };
+
+    alert('Driver(s) registered successfully!');
+    setDrivers([]);
+    setDriver({ ...initialDriver });
+    setDriverError({});
+    setListError('');
+    setFileInputKey(Date.now());
+  } catch (error) {
+    console.error('Registration error:', error);
+    alert(`Error: ${error.message}`);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <div className="pt-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">

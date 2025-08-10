@@ -1,12 +1,24 @@
-# React + Vite
+# LogiXJunction Frontend
+The frontend for LogiXJunction
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# How to setup locally
+1. Run the following command in terminal or Command Prompt
+```
+git clone https://github.com/logiXjunction/logix-frontend
+```
+2. Open the folder in your code editor or cd into the cloned folder
+```
+cd logix-frontend
+```
+3. Download the required node modules by running the following command
+```
+npm install
+```
+4. Run the site with vite by running the following command
+```
+npm run dev
+```
+or
+```
+npx vite
+```

@@ -144,23 +144,56 @@ export default function VehicleRegistration() {
     setVehicles(prev => prev.filter((_, i) => i !== idx));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (vehicles.length === 0) {
       setListError('Please add at least one vehicle before submitting.');
       return;
     }
+
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    try {
+      for (const v of vehicles) {
+        const formData = new FormData();
+        formData.append('vehicleName', v.vehicleName);
+        formData.append('dimensions', v.dimensions);
+        formData.append('capacity', v.capacity);
+        formData.append('vehicleType', v.vehicleType);
+        formData.append('vehicleNumber', v.vehicleNumber);
+        if (v.chassisNumber) formData.append('chassisNumber', v.chassisNumber);
+        formData.append('enclosureType', v.enclosureType);
+        formData.append('refrigerationStatus', v.refrigerationStatus);
+        formData.append('rc', v.rc);
+        formData.append('roadPermit', v.roadPermit);
+        formData.append('pollution', v.pollution);
+
+        const response = await fetch('https://logix-backend.onrender.com/api/vehicle/register', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const resText = await response.text();
+          throw new Error(`Failed to register vehicle ${v.vehicleNumber} — ${resText}`);
+        }
+      }
+
       alert('Vehicle(s) registered successfully!');
-      setIsSubmitting(false);
       setVehicles([]);
       setVehicle({ ...initialVehicle });
       setVehicleError({});
       setListError('');
       setFileInputKey(Date.now());
-    }, 2000);
+    } catch (error) {
+      console.error('Vehicle registration error:', error);
+      alert(`Error: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
 
   return (
     <div className="pt-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">

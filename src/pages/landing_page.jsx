@@ -4,6 +4,7 @@ import News from "./landingPageComponents/news.jsx";
 import CaseStudyShowcase from "./landingPageComponents/caseStudy.jsx";
 import Testimonials from "./landingPageComponents/testimonials.jsx";
 import ContactCTASection from "./landingPageComponents/contact.jsx";
+import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -34,22 +35,28 @@ export default function LandingPage() {
                 across Tier-2 & Tier-3 cities
               </p>
               <div className="flex space-x-4">
-                <button
+              <Link to="/inquiry-form">
+            <button className="cursor-pointer px-6 py-3 transition-all duration-300 transform bg-lxj-alert rounded-full text-white font-semibold  hover:bg-[#b92549]  ">
+              Request Shipment
+            </button>
+          </Link>
+                {/* <button
                   onClick={() => navigate("/signup-otp")}
                   className="px-6 py-3 transition-all duration-300 transform bg-lxj-accent text-white rounded-full font-semibold hover:bg-lxj-primary"
                 >
                   Get started
-                </button>
+                </button> */}
                 <a
                   href="/about-us"
                   className="px-6 py-3 border-2 transition-all duration-300 transform border-white rounded-full text-white font-semibold hover:bg-white hover:text-lxj-accent"
                 >
                   Explore Features →
                 </a>
+                
               </div>
             </div>
 
-            {/* Right Image */}
+            {/* Right Image
             {/* <div className="relative">
               <img
                 src="images/mobile-ui.png"

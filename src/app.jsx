@@ -24,6 +24,7 @@ import SignupFormPage from './pages/signup_otp';
 import VehicleRegistration from './pages/vehicle_registration';
 import DriverRegistration from './pages/driver_registration';
 import Dashboard from './pages/Dashboardtest';
+import InquiryForm from './pages/inquiry_form';
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
         <Route path="/client-dashboard" element={<ClientDashboard />} />
         <Route path="/available-transporter" element={<AvailableTransporters />} />
         <Route path="/shipment-registration" element={<ShipmentRegistration />} />        
+        <Route path="/inquiry-form" element={<InquiryForm />} />        
         
         
       </Routes>

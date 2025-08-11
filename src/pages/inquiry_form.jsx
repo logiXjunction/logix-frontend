@@ -8,7 +8,7 @@ import axios from 'axios';
 const InquiryForm = () => {
   const [formData, setFormData] = useState({
     name: '',
-    companyName:'',
+    companyName: '',
     phone: '',
     gst: '',
     pickupLocation: '',
@@ -63,13 +63,12 @@ const InquiryForm = () => {
   ];
 
   const coolingType = [
-    'Non-Refrigerated ',
-    'Refrigerated Ambient temperature',
+    'Ambient temperature/Non-Refrigerated',
     'Refrigerated Frozen temprature',
     'Refrigerated Chiller'
   ]
 
-  const truckSize = ['14 ft','17 ft','19 ft', '20 ft','22 ft', '24 ft', '32 ft', '40 ft']
+  const truckSize = ['14 ft', '17 ft', '19 ft', '20 ft', '22 ft', '24 ft', '32 ft', '40 ft']
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -209,8 +208,8 @@ const InquiryForm = () => {
                   <h2 className="text-3xl font-bold text-gray-800">Request Shipment</h2>
                   <p className="text-gray-600">Fill in the details to issue a request</p>
                 </div>
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full flex items-center justify-center">
-                  <Package className="w-8 h-8 text-white " />
+                <div className="w-16 h-16 bg-gradient-to-br from-lxj-accent to-lxj-primary rounded-full flex items-center justify-center">
+                  <Package className="w-8 h-8 text-white" />
                 </div>
               </div>
             </div>
@@ -580,7 +579,7 @@ const InquiryForm = () => {
               <div className="space-y-2">
                 <label className="flex items-center text-sm font-medium text-gray-700">
                   <Truck className="w-4 h-4 mr-2 text-red-600" />
-                  Cooling
+                  Vehicle Temprature
                 </label>
                 <select
                   name="coolingType"
@@ -597,7 +596,10 @@ const InquiryForm = () => {
 
               {/* Dynamically render Truck size */}
 
-              {formData.transportMode === 'Road Transport' && <div className="space-y-2">
+              <div className={`space-y-2 transition-all duration-500 ease-in-out ${formData.transportMode === 'Road Transport'
+                  ? 'opacity-100 translate-y-0 visible'
+                  : 'opacity-0 -translate-y-2 invisible'
+                }`}>
                 <label className="flex items-center text-sm font-medium text-gray-700">
                   <Truck className="w-4 h-4 mr-2 text-indigo-600" />
                   Truck Size
@@ -613,7 +615,7 @@ const InquiryForm = () => {
                     <option key={mode} value={mode}>{mode}</option>
                   ))}
                 </select>
-              </div>}
+              </div>
 
               {/* PTL/FTL and Material Value */}
 

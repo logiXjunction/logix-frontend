@@ -35,7 +35,7 @@ export default function LandingPage() {
                 across Tier-2 & Tier-3 cities
               </p>
               <div className="flex space-x-4">
-              <Link to="/shipment-registration">
+              <Link to="/inquiry-form">
             <button className="cursor-pointer px-6 py-3 transition-all duration-300 transform bg-lxj-alert rounded-full text-white font-semibold  hover:bg-[#b92549]  ">
               Request Shipment
             </button>

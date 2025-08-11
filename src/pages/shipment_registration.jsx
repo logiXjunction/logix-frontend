@@ -185,7 +185,7 @@ const ShipmentRegistration = () => {
             <div className="border-b pb-6 mb-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800">LogiTech Solutions</h2>
+                  <h2 className="text-2xl font-bold text-gray-800">LogiXJunction</h2>
                   <p className="text-gray-600">Your Trusted Logistics Partner</p>
                 </div>
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full flex items-center justify-center">

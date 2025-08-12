@@ -45,14 +45,7 @@ export default function LandingPage() {
                   className="px-6 py-3 transition-all duration-300 transform bg-lxj-accent text-white rounded-full font-semibold hover:bg-lxj-primary"
                 >
                   Get started
-                </button> */}
-                <a
-                  href="/about-us"
-                  className="px-6 py-3 border-2 transition-all duration-300 transform border-white rounded-full text-white font-semibold hover:bg-white hover:text-lxj-accent"
-                >
-                  Explore Features →
-                </a>
-                
+                </button> */}                
               </div>
             </div>
 

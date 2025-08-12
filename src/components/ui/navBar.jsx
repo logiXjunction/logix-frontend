@@ -15,7 +15,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-2 left-2 right-2 z-50 bg-white/40 backdrop-blur-md border border-white/30 shadow-lg px-6 py-3 flex items-center justify-between rounded-none md:rounded-full">
+      <nav className="fixed top-2 left-2 right-2 z-50 bg-white border border-white/30 shadow-lg px-6 py-3 flex items-center justify-between rounded-full md:rounded-full">
         
         {/* Left Section: Logo + Nav Links */}
         <div className="flex items-center space-x-6">
@@ -37,7 +37,7 @@ export default function Navbar() {
           <Link onClick={() => scrollAndNavigate("/sign-in")}>
             <button className="text-neutral-800 hover:text-[#d8315b] transition font-semibold">Sign In</button>
           </Link>
-          <Link onClick={() => scrollAndNavigate("/signup-otp")}>
+          <Link onClick={() => scrollAndNavigate("/shipment-registration")}>
             <button className="bg-[#d8315b] hover:bg-[#b92549] text-white px-4 py-2 rounded-full text-sm font-semibold shadow">
               Get Started
             </button>

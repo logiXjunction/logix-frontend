@@ -29,8 +29,8 @@ export default function ContactCTASection() {
           </div>
           <div className="flex items-center gap-3">
             <Phone className="w-7 h-7 text-lxj-accent" />
-            <a href="tel:+9198XXXXXX78" className="hover:underline text-lxj-primary">
-              +91 98XXXXXX78
+            <a href="tel:+918130438829" className="hover:underline text-lxj-primary">
+              +91 81XXXXXX29
             </a>
           </div>
           <div className="flex items-center gap-3">

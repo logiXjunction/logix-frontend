@@ -245,7 +245,7 @@ const Consignments = ({ data }) => {
         >
           <Truck size={16} />
           Live
-          <span className="ml-1 px-2 py-0.5 text-xs bg-black bg-opacity-10 rounded-full">
+          <span className="ml-1 px-2 py-0.5 text-white text-xs bg-black bg-opacity-10 rounded-full">
             {liveCount}
           </span>
         </button>
@@ -254,13 +254,13 @@ const Consignments = ({ data }) => {
           onClick={() => setActiveTab("Received")}
           className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
             activeTab === "Received"
-              ? "bg-yellow-400 text-white"
-              : "border border-yellow-400 text-yellow-500 bg-white hover:bg-yellow-50"
+              ? "bg-[#3e92cc] text-white"
+              : "border border-[#3e92cc] text-[#3e92cc] bg-white hover:bg-yellow-50"
           }`}
         >
           <Inbox size={16} />
           Received
-          <span className="ml-1 px-2 py-0.5 text-xs bg-black bg-opacity-10 rounded-full">
+          <span className="ml-1 px-2 py-0.5 text-xs text-white bg-black bg-opacity-10 rounded-full">
             {receivedCount}
           </span>
         </button>

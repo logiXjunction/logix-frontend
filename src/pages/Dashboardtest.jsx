@@ -220,6 +220,10 @@ const Consignments = ({ data }) => {
     return `${m}:${s}`;
   };
 
+  const [pickupDate, setPickupDate] = useState({});
+  const [loadingAssist, setLoadingAssist] = useState({});
+  const [deliveryDate, setDeliveryDate] = useState({});
+
   return (
     <div>
       {/* Header */}
@@ -237,11 +241,10 @@ const Consignments = ({ data }) => {
       <div className="flex gap-2 overflow-x-auto pb-2 mb-4">
         <button
           onClick={() => setActiveTab("Live")}
-          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap border ${
-            activeTab === "Live"
+          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap border ${activeTab === "Live"
               ? "bg-green-500 text-white border-green-500"
               : "border-green-500 text-green-600 bg-white hover:bg-green-50"
-          }`}
+            }`}
         >
           <Truck size={16} />
           Live
@@ -252,11 +255,10 @@ const Consignments = ({ data }) => {
 
         <button
           onClick={() => setActiveTab("Received")}
-          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
-            activeTab === "Received"
+          className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${activeTab === "Received"
               ? "bg-[#3e92cc] text-white"
-              : "border border-[#3e92cc] text-[#3e92cc] bg-white hover:bg-yellow-50"
-          }`}
+              : "border border-[#3e92cc] text-[#3e92cc] bg-white hover:bg-blue-50"
+            }`}
         >
           <Inbox size={16} />
           Received
@@ -310,23 +312,98 @@ const Consignments = ({ data }) => {
                 </div>
 
                 {/* Show for Received tab */}
-                {item.status.toLowerCase() === "received" && (
-                  <div className="flex items-center gap-2 w-full justify-center mt-2">
-                    <input
-                      type="number"
-                      className="border border-gray-300 rounded-lg px-3 py-1 text-sm w-3/5 no-arrows"
-                      placeholder="Enter price in ₹"
-                      value={quote[item.id] || ""}
-                      onChange={(e) => handleQuoteChange(item.id, e.target.value)}
-                    />
-                    <button
-                      onClick={() => handleSubmit(item.id)}
-                      className="px-3 py-1 text-sm rounded-lg bg-green-200 text-green-800 hover:bg-green-300"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                )}
+{item.status.toLowerCase() === "received" && (
+  <div className="mt-2 w-full flex flex-col items-center">
+    <div className="grid grid-cols-2 gap-4 w-full max-w-3xl">
+      {/* Price */}
+      <div className="flex flex-col w-full">
+        <label className="text-sm font-medium mb-1">
+          Quote Price (₹) <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm no-arrows"
+          value={quote[item.id] || ""}
+          onChange={(e) => handleQuoteChange(item.id, e.target.value)}
+        />
+      </div>
+
+      {/* Pickup Date */}
+      <div className="flex flex-col w-full">
+        <label className="text-sm font-medium mb-1">
+          Expected Pickup Date <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          min={new Date().toISOString().split("T")[0]}
+          max={deliveryDate[item.id] || ""}
+          className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm"
+          value={pickupDate[item.id] || ""}
+          onChange={(e) => {
+            const value = e.target.value;
+            setPickupDate((prev) => ({ ...prev, [item.id]: value }));
+
+            // If delivery date exists and is before pickup, reset it
+            if (deliveryDate[item.id] && deliveryDate[item.id] < value) {
+              setDeliveryDate((prev) => ({ ...prev, [item.id]: "" }));
+            }
+          }}
+        />
+      </div>
+
+      {/* Loading Assistance */}
+      <div className="flex flex-col w-full">
+        <label className="text-sm font-medium mb-1">
+          Loading Assistance <span className="text-red-500">*</span>
+        </label>
+        <select
+          className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm"
+          value={loadingAssist[item.id] || ""}
+          onChange={(e) =>
+            setLoadingAssist((prev) => ({ ...prev, [item.id]: e.target.value }))
+          }
+        >
+          <option value="">Select</option>
+          <option value="Available">Available</option>
+          <option value="Not Available">Not Available</option>
+        </select>
+      </div>
+
+      {/* Expected Delivery Date */}
+      <div className="flex flex-col w-full">
+        <label className="text-sm font-medium mb-1">
+          Expected Delivery Date
+        </label>
+        <input
+          type="date"
+          min={pickupDate[item.id] || new Date().toISOString().split("T")[0]}
+          className="w-full border border-gray-300 rounded-lg px-3 py-1 text-sm"
+          value={deliveryDate[item.id] || ""}
+          onChange={(e) => {
+            const value = e.target.value;
+            setDeliveryDate((prev) => ({ ...prev, [item.id]: value }));
+
+            // If pickup date exists and is after delivery, reset it
+            if (pickupDate[item.id] && pickupDate[item.id] > value) {
+              setPickupDate((prev) => ({ ...prev, [item.id]: "" }));
+            }
+          }}
+        />
+      </div>
+    </div>
+
+    {/* Submit Button */}
+    <button
+      onClick={() => handleSubmit(item.id)}
+      className="mt-3 px-6 py-1 text-sm rounded-lg bg-green-200 text-green-800 hover:bg-green-300"
+    >
+      Submit
+    </button>
+  </div>
+)}
+
+
+
 
                 {/* Show for Live tab */}
                 {item.status.toLowerCase() === "live" && (
@@ -401,229 +478,229 @@ const Consignments = ({ data }) => {
 
 
 
-      const RequestShipment = ({data}) => (
-      <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Shipment Requests</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map(req => (
-            <div key={req.id} className="bg-white p-6 rounded-lg shadow">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-lg font-bold text-gray-800">{req.id}</h3>
-                <Badge colorClass={statusColors[req.status]}>{req.status}</Badge>
-              </div>
-              <div className="space-y-3 text-sm">
-                <p className="text-gray-500 text-xs">{req.date}</p>
-                <p className="font-semibold text-gray-700">{req.route}</p>
-                <p className="text-gray-500">Goods: <span className="text-gray-700">{req.goods}</span></p>
-                <p className="text-gray-500">Weight: <span className="text-gray-700">{req.weight}</span></p>
-                <p className="text-gray-500">Est. Cost: <span className="text-gray-700 font-semibold">{req.cost}</span></p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      );
-
-      const ShipmentStatus = ({data}) => (
-      <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Shipment Status</h2>
-        <div className="space-y-6">
-          {data.map(item => (
-            <div key={item.id} className="bg-white p-6 rounded-lg shadow">
-              <div className="flex flex-wrap justify-between items-center mb-3 gap-2">
-                <h3 className="text-lg font-bold text-gray-800">{item.id}</h3>
-                <Badge colorClass={statusColors[item.status]}>{item.status}</Badge>
-              </div>
-              <p className="text-sm text-gray-500 mb-1">{item.route}</p>
-              <p className="text-sm text-gray-500 mb-4">Current Location: <span className="text-gray-700 font-medium">{item.location}</span></p>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-                <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${item.progress}%` }}></div>
-              </div>
-              <div className="flex justify-between items-center text-sm">
-                <p className="font-medium">{item.progress}%</p>
-                <p className="text-gray-500">Est. Delivery: {item.delivery}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      );
-
-      const Billing = ({data}) => (
-      <div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Billing</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-sm text-gray-500 mb-2">Total Pending</p>
-            <p className="text-3xl font-bold text-gray-800">{data.summary.pending}</p>
+const RequestShipment = ({ data }) => (
+  <div>
+    <h2 className="text-xl font-semibold text-gray-800 mb-6">Shipment Requests</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {data.map(req => (
+        <div key={req.id} className="bg-white p-6 rounded-lg shadow">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-lg font-bold text-gray-800">{req.id}</h3>
+            <Badge colorClass={statusColors[req.status]}>{req.status}</Badge>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-sm text-gray-500 mb-2">Total Paid</p>
-            <p className="text-3xl font-bold text-gray-800">{data.summary.paid}</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-sm text-gray-500 mb-2">Open Invoices</p>
-            <p className="text-3xl font-bold text-gray-800">{data.summary.openInvoices}</p>
+          <div className="space-y-3 text-sm">
+            <p className="text-gray-500 text-xs">{req.date}</p>
+            <p className="font-semibold text-gray-700">{req.route}</p>
+            <p className="text-gray-500">Goods: <span className="text-gray-700">{req.goods}</span></p>
+            <p className="text-gray-500">Weight: <span className="text-gray-700">{req.weight}</span></p>
+            <p className="text-gray-500">Est. Cost: <span className="text-gray-700 font-semibold">{req.cost}</span></p>
           </div>
         </div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent and manage your invoices</h3>
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  {['Invoice ID', 'Shipment', 'Amount', 'Status', 'Issue Date', 'Due Date'].map(header => (
-                    <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {data.invoices.map(item => (
-                  <tr key={item.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.shipment}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">{item.amount}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <Badge colorClass={statusColors[item.status]}>{item.status}</Badge>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.issueDate}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.dueDate}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      ))}
+    </div>
+  </div>
+);
+
+const ShipmentStatus = ({ data }) => (
+  <div>
+    <h2 className="text-xl font-semibold text-gray-800 mb-6">Shipment Status</h2>
+    <div className="space-y-6">
+      {data.map(item => (
+        <div key={item.id} className="bg-white p-6 rounded-lg shadow">
+          <div className="flex flex-wrap justify-between items-center mb-3 gap-2">
+            <h3 className="text-lg font-bold text-gray-800">{item.id}</h3>
+            <Badge colorClass={statusColors[item.status]}>{item.status}</Badge>
+          </div>
+          <p className="text-sm text-gray-500 mb-1">{item.route}</p>
+          <p className="text-sm text-gray-500 mb-4">Current Location: <span className="text-gray-700 font-medium">{item.location}</span></p>
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+            <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${item.progress}%` }}></div>
+          </div>
+          <div className="flex justify-between items-center text-sm">
+            <p className="font-medium">{item.progress}%</p>
+            <p className="text-gray-500">Est. Delivery: {item.delivery}</p>
           </div>
         </div>
+      ))}
+    </div>
+  </div>
+);
+
+const Billing = ({ data }) => (
+  <div>
+    <h2 className="text-xl font-semibold text-gray-800 mb-6">Billing</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="bg-white p-6 rounded-lg shadow">
+        <p className="text-sm text-gray-500 mb-2">Total Pending</p>
+        <p className="text-3xl font-bold text-gray-800">{data.summary.pending}</p>
       </div>
-      
-      );
-
-      const PlaceholderPage = ({title}) => (
-      <div>
-        <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
-        <p className="text-gray-500 mt-2">{title.toLowerCase()} interface would go here.</p>
+      <div className="bg-white p-6 rounded-lg shadow">
+        <p className="text-sm text-gray-500 mb-2">Total Paid</p>
+        <p className="text-3xl font-bold text-gray-800">{data.summary.paid}</p>
       </div>
-      );
+      <div className="bg-white p-6 rounded-lg shadow">
+        <p className="text-sm text-gray-500 mb-2">Open Invoices</p>
+        <p className="text-3xl font-bold text-gray-800">{data.summary.openInvoices}</p>
+      </div>
+    </div>
+    <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent and manage your invoices</h3>
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              {['Invoice ID', 'Shipment', 'Amount', 'Status', 'Issue Date', 'Due Date'].map(header => (
+                <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{header}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.invoices.map(item => (
+              <tr key={item.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.shipment}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">{item.amount}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <Badge colorClass={statusColors[item.status]}>{item.status}</Badge>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.issueDate}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.dueDate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-      // --- MAIN LAYOUT COMPONENTS (NOW RESPONSIVE) ---
+);
 
-      const transporterNav = [
-      {name: 'Consignment', icon: <BoxIcon /> }, {name: 'Shipment History', icon: <ClockIcon /> },
-      {name: 'Add Vehicle', icon: <TruckIcon /> }, 
+const PlaceholderPage = ({ title }) => (
+  <div>
+    <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
+    <p className="text-gray-500 mt-2">{title.toLowerCase()} interface would go here.</p>
+  </div>
+);
 
-      ];
+// --- MAIN LAYOUT COMPONENTS (NOW RESPONSIVE) ---
 
-      const shipperNav = [
-      {name: 'Request Shipment', icon: <PlusIcon /> }, {name: 'Status', icon: <LocationIcon /> },
-      {name: 'Billing', icon: <CreditCardIcon /> },
-      ];
+const transporterNav = [
+  { name: 'Consignment', icon: <BoxIcon /> }, { name: 'Shipment History', icon: <ClockIcon /> },
+  { name: 'Add Vehicle', icon: <TruckIcon /> },
 
-      const Sidebar = ({userType, activePage, setActivePage, sidebarOpen, setSidebarOpen}) => {
+];
+
+const shipperNav = [
+  { name: 'Request Shipment', icon: <PlusIcon /> }, { name: 'Status', icon: <LocationIcon /> },
+  { name: 'Billing', icon: <CreditCardIcon /> },
+];
+
+const Sidebar = ({ userType, activePage, setActivePage, sidebarOpen, setSidebarOpen }) => {
   const isTransporter = userType === 'transporter';
-      const navItems = isTransporter ? transporterNav : shipperNav;
-      const user = isTransporter ? {name: 'Rajesh Kumar', role: 'Transporter' } : {name: 'Priya Sharma', role: 'Shipper' };
+  const navItems = isTransporter ? transporterNav : shipperNav;
+  const user = isTransporter ? { name: 'Rajesh Kumar', role: 'Transporter' } : { name: 'Priya Sharma', role: 'Shipper' };
 
   const handleNavClick = (page) => {
-        setActivePage(page);
-      setSidebarOpen(false); // Close sidebar on navigation
+    setActivePage(page);
+    setSidebarOpen(false); // Close sidebar on navigation
   };
 
-      return (
-      <>
-        {/* Overlay for mobile */}
-        <div
-          className={`fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden transition-opacity ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          onClick={() => setSidebarOpen(false)}
-        ></div>
+  return (
+    <>
+      {/* Overlay for mobile */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden transition-opacity ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setSidebarOpen(false)}
+      ></div>
 
-        {/* Sidebar */}
-        <div className={`fixed top-0 left-0 h-screen w-64 bg-slate-900 text-gray-300 flex-shrink-0 flex flex-col z-40
+      {/* Sidebar */}
+      <div className={`fixed top-0 left-0 h-screen w-64 bg-slate-900 text-gray-300 flex-shrink-0 flex flex-col z-40
                        transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 
                        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-          <div className="p-6 border-b border-slate-800">
-            <h2 className="text-lg font-semibold text-white">{user.name}</h2>
-            <span className="text-sm text-gray-400">{user.role}</span>
-          </div>
-          <nav className="flex-1 p-4 space-y-2">
-            {/* Sidebar navigation buttons */}
-            {navItems.map(item => (
-              <button
-                key={item.name}
-                onClick={() => handleNavClick(item.name)}
-                className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg text-left transition cursor-pointer ${activePage === item.name
-                  ? 'bg-indigo-600 text-white'
-                  : 'hover:bg-slate-700'
-                  }`}
-              >
-                {item.icon}
-                <span>{item.name}</span>
-              </button>
-            ))}
-          </nav>
-          {/* Logout button at the bottom */}
-          <div className="p-4 mt-auto">
+        <div className="p-6 border-b border-slate-800">
+          <h2 className="text-lg font-semibold text-white">{user.name}</h2>
+          <span className="text-sm text-gray-400">{user.role}</span>
+        </div>
+        <nav className="flex-1 p-4 space-y-2">
+          {/* Sidebar navigation buttons */}
+          {navItems.map(item => (
             <button
-              className="w-full flex items-center justify-center px-4 py-2 rounded-lg bg-[#0a2463] text-white font-semibold transition cursor-pointer hover:bg-[#3e92cc]"
-              onClick={() => {
-                // Add your logout logic here
-                window.location.href = '/sign_in';
-              }}
+              key={item.name}
+              onClick={() => handleNavClick(item.name)}
+              className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg text-left transition cursor-pointer ${activePage === item.name
+                ? 'bg-indigo-600 text-white'
+                : 'hover:bg-slate-700'
+                }`}
             >
-              Logout
+              {item.icon}
+              <span>{item.name}</span>
             </button>
-          </div>
-        </div>
-      </>
-      );
-};
-
-      const DashboardHeader = ({userType, setUserType, activePage, setSidebarOpen}) => {
-  const isTransporter = userType === 'transporter';
-      const title = isTransporter ? 'Transporter Dashboard' : 'Shipper Dashboard';
-
-      const showAddVehicle = isTransporter && activePage === 'Add Vehicle';
-      const showNewRequest = !isTransporter && activePage === 'Request Shipment';
-
-      return (
-      <div className="flex justify-between items-center mb-8 gap-4 flex-wrap">
-        <div className="flex items-center gap-4">
-          <button onClick={() => setSidebarOpen(true)} className="md:hidden text-gray-600">
-            <MenuIcon />
+          ))}
+        </nav>
+        {/* Logout button at the bottom */}
+        <div className="p-4 mt-auto">
+          <button
+            className="w-full flex items-center justify-center px-4 py-2 rounded-lg bg-[#0a2463] text-white font-semibold transition cursor-pointer hover:bg-[#3e92cc]"
+            onClick={() => {
+              // Add your logout logic here
+              window.location.href = '/sign_in';
+            }}
+          >
+            Logout
           </button>
-          <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
-        </div>
-        <div className="flex items-center space-x-4">
-          <ToggleSwitch userType={userType} setUserType={setUserType} />
-          {/* DashboardHeader action buttons */}
-          {showAddVehicle && (
-            <button className="bg-[#0a2463] text-white px-4 py-2 rounded-lg font-semibold transition hidden sm:block cursor-pointer hover:bg-[#3e92cc]">
-              Add Vehicle
-            </button>
-          )}
-          {showNewRequest && (
-            <button className="bg-[#0a2463] text-white px-4 py-2 rounded-lg font-semibold transition hidden sm:block cursor-pointer hover:bg-[#3e92cc]">
-              New Request
-            </button>
-          )}
         </div>
       </div>
-      );
+    </>
+  );
+};
+
+const DashboardHeader = ({ userType, setUserType, activePage, setSidebarOpen }) => {
+  const isTransporter = userType === 'transporter';
+  const title = isTransporter ? 'Transporter Dashboard' : 'Shipper Dashboard';
+
+  const showAddVehicle = isTransporter && activePage === 'Add Vehicle';
+  const showNewRequest = !isTransporter && activePage === 'Request Shipment';
+
+  return (
+    <div className="flex justify-between items-center mb-8 gap-4 flex-wrap">
+      <div className="flex items-center gap-4">
+        <button onClick={() => setSidebarOpen(true)} className="md:hidden text-gray-600">
+          <MenuIcon />
+        </button>
+        <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
+      </div>
+      <div className="flex items-center space-x-4">
+        <ToggleSwitch userType={userType} setUserType={setUserType} />
+        {/* DashboardHeader action buttons */}
+        {showAddVehicle && (
+          <button className="bg-[#0a2463] text-white px-4 py-2 rounded-lg font-semibold transition hidden sm:block cursor-pointer hover:bg-[#3e92cc]">
+            Add Vehicle
+          </button>
+        )}
+        {showNewRequest && (
+          <button className="bg-[#0a2463] text-white px-4 py-2 rounded-lg font-semibold transition hidden sm:block cursor-pointer hover:bg-[#3e92cc]">
+            New Request
+          </button>
+        )}
+      </div>
+    </div>
+  );
 };
 
 
-      // --- DASHBOARD COMPONENT ---
+// --- DASHBOARD COMPONENT ---
 
-      function Dashboard() {
+function Dashboard() {
   const [userType, setUserType] = useState('transporter');
-      const [activePage, setActivePage] = useState('Shipment History');
-      const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activePage, setActivePage] = useState('Shipment History');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleUserTypeChange = (newUserType) => {
-        setUserType(newUserType);
-      if (newUserType === 'transporter') {
-        setActivePage('Consignment');
+    setUserType(newUserType);
+    if (newUserType === 'transporter') {
+      setActivePage('Consignment');
     } else {
-        setActivePage('Request Shipment');
+      setActivePage('Request Shipment');
     }
   };
 
@@ -631,42 +708,42 @@ const Consignments = ({ data }) => {
     if (userType === 'transporter') {
       switch (activePage) {
         case 'Shipment History': return <ShipmentHistory data={transporterData.shipmentHistory} />;
-      case 'Add Vehicle': return <VehicleList data={transporterData.vehicles} />;
-      case 'Consignment': return <Consignments data={transporterData.consignments} />;
-      case 'Assign Vehicle': return <PlaceholderPage title="Vehicle Assignment" />;
-      case 'Assign Driver': return <PlaceholderPage title="Driver Assignment" />;
-      default: return <Consignments data={transporterData.consignments} />;
+        case 'Add Vehicle': return <VehicleList data={transporterData.vehicles} />;
+        case 'Consignment': return <Consignments data={transporterData.consignments} />;
+        case 'Assign Vehicle': return <PlaceholderPage title="Vehicle Assignment" />;
+        case 'Assign Driver': return <PlaceholderPage title="Driver Assignment" />;
+        default: return <Consignments data={transporterData.consignments} />;
       }
     } else { // Shipper
       switch (activePage) {
         case 'Request Shipment': return <RequestShipment data={shipperData.requests} />;
-      case 'Status': return <ShipmentStatus data={shipperData.status} />;
-      case 'Billing': return <Billing data={shipperData.billing} />;
-      default: return <RequestShipment data={shipperData.requests} />;
+        case 'Status': return <ShipmentStatus data={shipperData.status} />;
+        case 'Billing': return <Billing data={shipperData.billing} />;
+        default: return <RequestShipment data={shipperData.requests} />;
       }
     }
   };
 
-      return (
-      <div className="relative md:flex bg-gray-100 font-sans min-h-screen">
-        <Sidebar
+  return (
+    <div className="relative md:flex bg-gray-100 font-sans min-h-screen">
+      <Sidebar
+        userType={userType}
+        activePage={activePage}
+        setActivePage={setActivePage}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
+      <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <DashboardHeader
           userType={userType}
+          setUserType={handleUserTypeChange}
           activePage={activePage}
-          setActivePage={setActivePage}
-          sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
         />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
-          <DashboardHeader
-            userType={userType}
-            setUserType={handleUserTypeChange}
-            activePage={activePage}
-            setSidebarOpen={setSidebarOpen}
-          />
-          {renderContent()}
-        </main>
-      </div>
-      );
+        {renderContent()}
+      </main>
+    </div>
+  );
 }
 
-      export default Dashboard;
+export default Dashboard;

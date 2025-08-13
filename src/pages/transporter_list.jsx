@@ -12,6 +12,8 @@ const AvailableTransporters = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+
+  
   // Dummy transporter data for demo
   const dummyTransporters = [
     {
@@ -99,16 +101,14 @@ const AvailableTransporters = () => {
   };
 
   const filteredTransporters = transporters.filter((t) => {
-    const matchesSearch =
-      t.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.transporterName.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesFilter =
       filter === 'rating'
         ? t.rating >= 4.5
         : filter === 'cost'
         ? parseFloat(t.costEstimate.replace(/[^0-9.-]+/g, '')) < 5000
         : true;
-    return matchesSearch && matchesFilter;
+    return matchesFilter;
   });
 
   if (loading) {
@@ -163,13 +163,7 @@ const AvailableTransporters = () => {
           {/* Search and Filter - Mobile Responsive */}
           {activeTab === 'dedicated' && (
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center">
-              <input
-                type="text"
-                placeholder="Search by name or company"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm border border-zinc-300 focus:outline-none focus:ring-2 focus:ring-[#d8315b]"
-              />
+              
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}

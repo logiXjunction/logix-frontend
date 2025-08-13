@@ -25,6 +25,7 @@ import VehicleRegistration from './pages/vehicle_registration';
 import DriverRegistration from './pages/driver_registration';
 import Dashboard from './pages/Dashboardtest';
 import InquiryForm from './pages/inquiry_form';
+import NotFound from './pages/404';
 
 function App() {
   return (
@@ -62,7 +63,7 @@ function App() {
         <Route path="/available-transporter" element={<AvailableTransporters />} />
         <Route path="/shipment-registration" element={<ShipmentRegistration />} />        
         <Route path="/inquiry-form" element={<InquiryForm />} />        
-        
+        <Route path="*" element={<NotFound/>}/>
         
       </Routes>
       <Footer/>

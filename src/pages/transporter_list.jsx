@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Truck, Boxes } from 'lucide-react';
+import { Truck, Boxes, Filter } from 'lucide-react';
 // import { useLocation } from 'react-router-dom';
 import TransporterCard from '../components/cards/transporter_card';
-
+import { Range } from 'react-range';
 
 const AvailableTransporters = () => {
   const [activeTab, setActiveTab] = useState('dedicated');
@@ -11,6 +11,11 @@ const AvailableTransporters = () => {
   const [transporters, setTransporters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [costRange, setCostRange] = useState([500, 40000]);
+  const [etaRange, setEtaRange] = useState([1, 15]);
+  const [filtersDisplay, setFlitersDisplay] = useState(false);
+
+
 
   // Dummy transporter data for demo
   const dummyTransporters = [
@@ -81,17 +86,17 @@ const AvailableTransporters = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       // Example API call using axios
       // const response = await axios.get(`/api/transporters/available/${shipmentId}`);
       // setTransporters(response.data.transporters);
-      
+
       // For demo, we'll simulate API call
       setTimeout(() => {
         setTransporters(dummyTransporters);
         setLoading(false);
       }, 1000);
-      
+
     } catch (err) {
       setError('Failed to fetch transporters. Please try again.');
       setLoading(false);
@@ -99,16 +104,15 @@ const AvailableTransporters = () => {
   };
 
   const filteredTransporters = transporters.filter((t) => {
-    const matchesSearch =
-      t.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.transporterName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter =
-      filter === 'rating'
-        ? t.rating >= 4.5
-        : filter === 'cost'
-        ? parseFloat(t.costEstimate.replace(/[^0-9.-]+/g, '')) < 5000
-        : true;
-    return matchesSearch && matchesFilter;
+    const cost = parseFloat(t.costEstimate.replace(/[^0-9.-]+/g, ''));
+    const etaNumbers = t.deliveryETA.match(/\d+/g)?.map(Number) || [];
+    const etaMin = Math.min(...etaNumbers);
+    const etaMax = Math.max(...etaNumbers);
+
+    const matchesCost = cost >= costRange[0] && cost <= costRange[1];
+    const matchesETA = etaMin >= etaRange[0] && etaMax <= etaRange[1];
+
+    return matchesCost && matchesETA;
   });
 
   if (loading) {
@@ -137,48 +141,146 @@ const AvailableTransporters = () => {
         {/* Tabs and Controls */}
         <div className="flex flex-col bg-white/80 rounded-xl p-3 sm:p-4 shadow mb-4 sm:mb-6">
           {/* Tabs */}
-          <div className="flex justify-center sm:justify-start gap-2 sm:gap-4 mb-3 sm:mb-4">
-            <button
-              onClick={() => setActiveTab('dedicated')}
-              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm ${
-                activeTab === 'dedicated' 
-                  ? 'bg-[#d8315b] text-white' 
+          <div className="flex justify-between items-center mb-3 sm:mb-4">
+            <div className="flex justify-center sm:justify-start gap-2 sm:gap-4">
+              <button
+                onClick={() => setActiveTab('dedicated')}
+                className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm ${activeTab === 'dedicated'
+                  ? 'bg-[#d8315b] text-white'
                   : 'bg-zinc-100 text-gray-600 hover:bg-zinc-200'
-              }`}
-            >
-              <Truck size={14} className="sm:w-4 sm:h-4" /> Dedicated
-            </button>
-            <button
-              onClick={() => setActiveTab('container')}
-              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm ${
-                activeTab === 'container' 
-                  ? 'bg-[#0a2463] text-white' 
+                  }`}
+              >
+                <Truck size={14} className="sm:w-4 sm:h-4" /> Dedicated
+              </button>
+              <button
+                onClick={() => setActiveTab('container')}
+                className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm ${activeTab === 'container'
+                  ? 'bg-[#0a2463] text-white'
                   : 'bg-zinc-100 text-gray-600 hover:bg-zinc-200'
-              }`}
+                  }`}
+              >
+                <Boxes size={14} className="sm:w-4 sm:h-4" /> Containerization
+              </button>
+            </div>
+
+            <button
+              onClick={() => setFlitersDisplay((prev) => !prev)}
+              className={`cursor-pointer flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm ${filtersDisplay
+                ? 'bg-lxj-accent text-white'
+                : 'bg-zinc-100 text-gray-600 hover:bg-zinc-200'
+                }`}
             >
-              <Boxes size={14} className="sm:w-4 sm:h-4" /> Containerization
+              <Filter size={14} className="sm:w-4 sm:h-4" />{' '}
+              {!filtersDisplay ? 'Show Filters' : 'Hide Filters'}
             </button>
           </div>
 
+
           {/* Search and Filter - Mobile Responsive */}
-          {activeTab === 'dedicated' && (
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center">
-              <input
-                type="text"
-                placeholder="Search by name or company"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm border border-zinc-300 focus:outline-none focus:ring-2 focus:ring-[#d8315b]"
-              />
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="rounded-full px-3 sm:px-4 py-2 text-xs sm:text-sm border border-zinc-300 focus:outline-none focus:ring-2 focus:ring-[#0a2463] bg-white"
-              >
-                <option value="">All Transporters</option>
-                <option value="rating">Top Rated (4.5+)</option>
-                <option value="cost">Budget Friendly (&lt;₹5000)</option>
-              </select>
+          {activeTab === 'dedicated' && filtersDisplay && (
+
+            <div className="bg-white p-4 rounded-xl shadow space-y-6 mb-6">
+              {/* Cost Slider */}
+              <div>
+                <label className="font-medium block mb-2">Cost (₹{costRange[0]} - ₹{costRange[1]})</label>
+                <Range
+                  step={500}
+                  min={500}
+                  max={40000}
+                  values={costRange}
+                  onChange={setCostRange}
+                  renderTrack={({ props, children }) => (
+                    <div
+                      onMouseDown={props.onMouseDown}
+                      onTouchStart={props.onTouchStart}
+                      style={{
+                        ...props.style,
+                        display: 'flex',
+                        height: '36px',
+                        width: '100%'
+                      }}
+                    >
+                      <div
+                        ref={props.ref}
+                        style={{
+                          height: '6px',
+                          width: '100%',
+                          background: '#ddd',
+                          borderRadius: '4px',
+                          alignSelf: 'center'
+                        }}
+                      >
+                        {children}
+                      </div>
+                    </div>
+                  )}
+                  renderThumb={({ props }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '18px',
+                        width: '18px',
+                        backgroundColor: '#0a2463',
+                        borderRadius: '50%',
+                        cursor: 'pointer'
+                      }}
+                    />
+                  )}
+                />
+
+              </div>
+
+              {/* ETA Slider */}
+              <div>
+                <label className="font-medium block mb-2">ETA ({etaRange[0]} - {etaRange[1]} days)</label>
+                <Range
+                  step={1}
+                  min={1}
+                  max={15}
+                  values={etaRange}
+                  onChange={setEtaRange}
+                  renderTrack={({ props, children }) => (
+                    <div
+                      onMouseDown={props.onMouseDown}
+                      onTouchStart={props.onTouchStart}
+                      style={{
+                        ...props.style,
+                        display: 'flex',
+                        height: '36px',
+                        width: '100%'
+                      }}
+                    >
+                      <div
+                        ref={props.ref}
+                        style={{
+                          height: '6px',
+                          width: '100%',
+                          background: '#ddd',
+                          borderRadius: '4px',
+                          alignSelf: 'center'
+                        }}
+                      >
+                        {children}
+                      </div>
+                    </div>
+                  )}
+                  renderThumb={({ props }) => (
+                    <div
+                      {...props}
+                      style={{
+                        ...props.style,
+                        height: '18px',
+                        width: '18px',
+                        backgroundColor: '#d8315b',
+                        borderRadius: '50%',
+                        cursor: 'pointer'
+                      }}
+                    />
+                  )}
+                />
+
+              </div>
             </div>
           )}
         </div>
@@ -201,7 +303,7 @@ const AvailableTransporters = () => {
             🚧 Containerization module is coming soon.
           </div>
         )}
-        
+
         {/* Demo Button to Simulate API Call */}
         <div className="text-center mt-8">
           <button

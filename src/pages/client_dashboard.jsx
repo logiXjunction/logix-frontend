@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Edit3, Plus, Calendar, User, Phone, Mail, MapPin, Shield, FileText, Package, Clock, CheckCircle, XCircle, AlertCircle, MoreHorizontal, Send, Eye, MessageCircle, Truck, PackageCheck, PackageX, Timer, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ClientDashboard = () => {
   const [activePage, setActivePage] = useState('Overview');
@@ -70,7 +71,7 @@ const ClientDashboard = () => {
         estimatedDelivery: "19 Jul 2024"
       }
     ],
-    upcoming: [
+    applied: [
       {
         id: "SH006",
         description: "Pharmaceutical delivery",
@@ -134,7 +135,7 @@ const ClientDashboard = () => {
       case 'completed': return 'text-emerald-700 bg-emerald-50 border-emerald-200';
       case 'ongoing': return 'text-blue-700 bg-blue-50 border-blue-200';
       case 'rejected': return 'text-red-700 bg-red-50 border-red-200';
-      case 'upcoming': return 'text-amber-700 bg-amber-50 border-amber-200';
+      case 'applied': return 'text-amber-700 bg-amber-50 border-amber-200';
       default: return 'text-slate-700 bg-slate-50 border-slate-200';
     }
   };
@@ -144,7 +145,7 @@ const ClientDashboard = () => {
       case 'completed': return <CheckCircle className="w-3.5 h-3.5" />;
       case 'ongoing': return <Truck className="w-3.5 h-3.5" />;
       case 'rejected': return <XCircle className="w-3.5 h-3.5" />;
-      case 'upcoming': return <Clock className="w-3.5 h-3.5" />;
+      case 'applied': return <Clock className="w-3.5 h-3.5" />;
       default: return <Package className="w-3.5 h-3.5" />;
     }
   };
@@ -154,7 +155,7 @@ const ClientDashboard = () => {
       completed: activeShipmentTab === tab ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-emerald-700 border-emerald-200 hover:bg-emerald-50',
       ongoing: activeShipmentTab === tab ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-blue-700 border-blue-200 hover:bg-blue-50',
       rejected: activeShipmentTab === tab ? 'bg-red-600 text-white border-red-600' : 'bg-white text-red-700 border-red-200 hover:bg-red-50',
-      upcoming: activeShipmentTab === tab ? 'bg-amber-600 text-white border-amber-600' : 'bg-white text-amber-700 border-amber-200 hover:bg-amber-50'
+      applied: activeShipmentTab === tab ? 'bg-amber-600 text-white border-amber-600' : 'bg-white text-amber-700 border-amber-200 hover:bg-amber-50'
     };
     return colors[tab] || 'bg-white text-slate-700 border-slate-200';
   };
@@ -171,7 +172,7 @@ const ClientDashboard = () => {
   const shipmentTabs = [
     { id: 'ongoing', label: 'Ongoing', count: shipmentsByStatus.ongoing.length },
     { id: 'completed', label: 'Completed', count: shipmentsByStatus.completed.length },
-    { id: 'upcoming', label: 'Upcoming', count: shipmentsByStatus.upcoming.length },
+    { id: 'applied', label: 'Applied', count: shipmentsByStatus.applied.length },
     { id: 'rejected', label: 'Rejected', count: shipmentsByStatus.rejected.length }
   ];
 
@@ -322,7 +323,7 @@ const ClientDashboard = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="flex flex-col mx-5 md:mx-0 md:flex-row justify-between md:items-center gap-4">
               <div>
                 <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Destination</p>
                 <p className="font-medium text-slate-900 mt-1 truncate">{shipment.destination}</p>
@@ -333,13 +334,17 @@ const ClientDashboard = () => {
               </div>
               <div>
                 <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                  {activeShipmentTab === 'upcoming' ? 'Scheduled Pickup' : 
+                  {activeShipmentTab === 'applied' ? 'Scheduled Pickup' : 
                    activeShipmentTab === 'ongoing' ? 'Est. Delivery' : 'Date'}
                 </p>
                 <p className="font-medium text-slate-900 mt-1">
                   {shipment.estimatedDelivery || shipment.scheduledPickup || shipment.date}
                 </p>
               </div>
+              {activeShipmentTab==='applied' && 
+              <Link to="/available-transporter">
+                <button className='bg-lxj-alert cursor-pointer text-white py-2 px-3 rounded-xl'>View Biddings</button>
+                </Link>}
             </div>
 
             {/* Rejection Reason */}

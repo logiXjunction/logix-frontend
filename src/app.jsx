@@ -18,13 +18,12 @@ import Navbar from './components/ui/navBar';
 import LandingPage from './pages/landing_page';
 import AboutUs from './pages/about_us';
 import Careers from './pages/career';
-
+import AdminPanel from './pages/admin_panel';
 import SignupFormPage from './pages/signup_otp';
 
 import VehicleRegistration from './pages/vehicle_registration';
 import DriverRegistration from './pages/driver_registration';
 import Dashboard from './pages/Dashboardtest';
-import InquiryForm from './pages/inquiry_form';
 
 function App() {
   return (
@@ -41,12 +40,11 @@ function App() {
         <Route path="/join-us" element={<Careers />} />
         <Route path="/careers" element={<Careers />} />
 
-
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/signup-otp" element={<SignupFormPage />} />
         <Route path="/carrier-registration" element={<CarrierRegistration />} />
         <Route path="/shipper-registration" element={<ShipperRegistration />} />
-
+        <Route path="/admin-panel" element={<AdminPanel />} />
 
         <Route path="/transporter-dashboard" element={<TransporterDashboard />} />        
         <Route path="/shipments" element={<Shipments />} />
@@ -61,7 +59,6 @@ function App() {
         <Route path="/client-dashboard" element={<ClientDashboard />} />
         <Route path="/available-transporter" element={<AvailableTransporters />} />
         <Route path="/shipment-registration" element={<ShipmentRegistration />} />        
-        <Route path="/inquiry-form" element={<InquiryForm />} />        
         
         
       </Routes>

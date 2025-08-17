@@ -15,6 +15,8 @@ export default function AdminPanel() {
     "Offered Shipments": [
       { id: "SH001", route: "Mumbai → Delhi", goods: "Electronics", date: "15/1/2024", status: "offered" },
       { id: "SH004", route: "Bengaluru → Chennai", goods: "Furniture", date: "18/1/2024", status: "offered" },
+      { id: "SH005", route: "Kolkata → Chennai", goods: "Food", date: "19/1/2024", status: "rejected" },
+    
     ],
     "Confirmed Shipments": [
       { id: "CON001", client: "TechMart Electronics", route: "Mumbai → Delhi", goods: "Electronics", pickup: "15/1/2024", delivery: "20/1/2024", status: "confirmed" },
@@ -26,6 +28,11 @@ export default function AdminPanel() {
     ],
   };
 
+  // Shipment Request: Accept, Reject
+  // Offered Shipments: If status = Rejected , Modify
+  // Confirmed Shipments: N/A
+  // Mod: Accept, Reject
+
   const tabs = [
     { key: "Shipment Requests", label: "Shipment Requests", icon: <Package size={16} /> },
     { key: "Offered Shipments", label: "Offered Shipments", icon: <Truck size={16} /> },
@@ -34,7 +41,7 @@ export default function AdminPanel() {
   ];
 
   return (
-    <div className="p-6 mt-[70px]">
+    <div className="p-6 min-h-screen mt-[70px]">
       {/* Heading */}
       <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
 
@@ -108,7 +115,8 @@ export default function AdminPanel() {
       {/* Tab Content */}
       <div className="p-4 border rounded-xl bg-gray-50 shadow-sm">
         {data[activeTab].map((item) => (
-          <div key={item.id} className="mb-3 p-3 bg-white border rounded-lg shadow-sm">
+          <div key={item.id} className="mb-3 p-3 bg-white border rounded-lg shadow-sm flex justify-between items-center">
+            <div>
             <p className="font-medium">{item.id} • {item.route}</p>
             <p className="text-sm text-gray-600">{item.goods}</p>
             {item.pickup && <p className="text-xs text-gray-500">Pickup: {item.pickup}</p>}
@@ -116,6 +124,18 @@ export default function AdminPanel() {
             {item.cost && <p className="text-xs text-gray-500">Cost: {item.cost}</p>}
             {item.request && <p className="text-xs text-gray-500">Request: {item.request}</p>}
             <p className="text-xs text-gray-500">Status: {item.status}</p>
+            </div>
+            {(activeTab==="Shipment Requests") && <div className="flex flex-col gap-y-2">
+            <button className="cursor-pointer border-2 border-lxj-accent bg-lxj-accent text-white font-semibold py-2 px-3 rounded-xl hover:opacity-80">Accept Offer</button>
+            <button className="cursor-pointer border-2 text-red-600 font-semibold py-2 px-3 rounded-xl hover:bg-red-600 hover:text-white">Reject Offer</button>
+            </div>}
+            {(activeTab==="Offered Shipments") && (item.status=="rejected") && <div className="flex flex-col gap-y-2">
+            <button className="cursor-pointer border-2 border-lxj-accent bg-lxj-accent text-white font-semibold py-2 px-3 rounded-xl hover:opacity-80">Modify Offer</button>
+            </div>}
+            {(activeTab==="Modification Requests") && <div className="flex flex-col gap-y-2">
+            <button className="cursor-pointer border-2 border-lxj-accent bg-lxj-accent text-white font-semibold py-2 px-3 rounded-xl hover:opacity-80">Accept Request</button>
+            <button className="cursor-pointer border-2 text-red-600 font-semibold py-2 px-3 rounded-xl hover:bg-red-600 hover:text-white">Reject Request</button>
+            </div>}
           </div>
         ))}
       </div>
